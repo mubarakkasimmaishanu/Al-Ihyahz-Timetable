@@ -1,0 +1,16 @@
+{
+  "name": "al-ihyahz-timetable-server",
+  "version": "1.0.0",
+  "description": "Backend server and aSc-inspired constraint-solving generator for school timetables",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node db/seed.js",
+    "test-engine": "node test-engine.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "al-ihyahz-timetable-system",
+  "version": "1.0.0",
+  "description": "Conflict-free lightweight school timetable scheduling system for Northern Nigerian secondary schools",
+  "type": "module",
+  "scripts": {
+    "dev": "node run-dev.js",
+    "seed": "node server/db/seed.js",
+    "server": "node server/index.js",
+    "client": "npm run dev --prefix client",
+    "test-engine": "node server/test-engine.js"
+  }
+}

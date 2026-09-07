@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production build
+client/dist/
+dist/
+
+# SQLite DB (optional: if you want DB tracked or excluded, usually exclude or keep starter)
+# server/db/timetable.sqlite
+
+# Logs & Temporary
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+scratch/
+
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

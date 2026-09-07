@@ -1,0 +1,728 @@
+/* Al-Ihyaz Academy - aSc Timetable Design System */
+:root {
+  --primary: #15803d;
+  --primary-hover: #166534;
+  --accent: #b45309;
+  --bg-main: #f3f4f6;
+  --text-main: #000000;
+  --border-dark: #000000;
+  --border-light: #cbd5e1;
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================= */
+/* CLEAN, SIMPLE, NON-FLASHY TOP TOOLBAR                     */
+/* ========================================================= */
+.clean-toolbar {
+  background: #ffffff;
+  border-bottom: 1px solid #d1d5db;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.clean-nav-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f3f4f6;
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.clean-tab-btn {
+  padding: 6px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #4b5563;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-family);
+}
+
+.clean-tab-btn:hover:not(.active) {
+  color: #111827;
+  background: #e5e7eb;
+}
+
+.clean-tab-btn.active {
+  background: #000000;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.clean-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.clean-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid #d1d5db;
+  outline: none;
+  background: #ffffff;
+  color: #374151;
+  font-family: var(--font-family);
+}
+
+.clean-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+.clean-btn-primary {
+  background: #15803d;
+  color: #ffffff;
+  border-color: #15803d;
+  font-weight: 700;
+}
+
+.clean-btn-primary:hover {
+  background: #166534;
+  border-color: #166534;
+  color: #ffffff;
+}
+
+.clean-btn-ghost {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #6b7280;
+}
+
+.clean-btn-ghost:hover {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+.clean-clash-warning {
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  padding: 16px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.view-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Clean Selector Bar */
+.clean-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  background: #ffffff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  width: fit-content;
+}
+
+.clean-selector-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.clean-select-input {
+  padding: 6px 14px;
+  border: 1.5px solid #000000;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  outline: none;
+  background: #ffffff;
+  cursor: pointer;
+  min-width: 280px;
+}
+
+.clean-day-btn {
+  padding: 5px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: all 0.15s ease;
+}
+
+.clean-day-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.clean-day-btn.active {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  font-weight: 700;
+}
+
+/* ========================================================= */
+/* THE EXACT aSc TIMETABLE SHEET TEMPLATE (MATCHING THE PHOTO) */
+/* ========================================================= */
+.asc-timetable-sheet {
+  background: #ffffff;
+  padding: 24px 32px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  color: #000000;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Top Sheet Header */
+.asc-sheet-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.asc-sheet-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #000000;
+  margin-bottom: 2px;
+}
+
+.asc-sheet-subtitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+/* THE LINE-FORMATTED GRID TABLE */
+.asc-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #000000;
+  table-layout: fixed;
+  background: #ffffff;
+}
+
+.asc-table th,
+.asc-table td {
+  border: 1px solid #000000;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  color: #000000;
+}
+
+/* Header Cells (1 to 8 + Break + Assembly) */
+.asc-th-day {
+  width: 58px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1px solid #000000;
+}
+
+.asc-th-assembly {
+  width: 66px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  padding: 4px 1px;
+}
+
+.asc-assembly-cell {
+  background: #ffffff;
+  border: 1px solid #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #000000;
+  text-align: center;
+  padding: 2px;
+}
+
+.asc-th-sweeping {
+  width: 66px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  padding: 4px 1px;
+}
+
+.asc-sweeping-cell {
+  background: #ffffff;
+  border: 1px solid #000000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #000000;
+  text-align: center;
+  padding: 2px;
+}
+
+.asc-th-period {
+  background: #ffffff;
+  padding: 4px 1px;
+  border: 1px solid #000000;
+}
+
+.asc-period-number {
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #000000;
+}
+
+.asc-period-time {
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: #222222;
+  margin-top: 1px;
+}
+
+/* Day Row Labels */
+.asc-day-label {
+  font-size: 0.88rem;
+  font-weight: 800;
+  background: #ffffff;
+  padding: 4px 2px;
+  border: 1px solid #000000;
+  text-align: center;
+}
+
+/* BREAK Column (Spanning Middle) */
+.asc-break-th {
+  width: 54px;
+  background: #ffffff;
+  border: 1px solid #000000;
+  padding: 4px 1px;
+}
+
+.asc-break-th .asc-period-time {
+  font-size: 0.62rem;
+  letter-spacing: -0.02em;
+}
+
+.asc-break-cell {
+  background: #ffffff;
+  border: 1px solid #000000;
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px 2px;
+  user-select: none;
+}
+
+.asc-vertical-break {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #000000;
+  user-select: none;
+}
+
+/* aSc Lesson Cell Layout */
+.asc-cell {
+  height: 52px;
+  padding: 3px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  background: #ffffff;
+}
+
+.asc-cell-top-subject {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #222222;
+  line-height: 1;
+}
+
+.asc-cell-center-class {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: #000000;
+  margin: auto 0;
+}
+
+.asc-cell-top-teacher {
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333333;
+  line-height: 1;
+}
+
+.asc-cell-center-subject {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: #000000;
+  margin: auto 0;
+}
+
+/* Paired Simultaneous Electives (e.g. Science / Arts splits) */
+.asc-cell-paired {
+  padding: 3px 2px;
+  justify-content: center;
+  gap: 3px;
+}
+
+.asc-paired-teachers {
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  line-height: 1;
+}
+
+.asc-paired-subjects {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.asc-paired-sep {
+  font-weight: 400;
+  color: #777777;
+}
+
+.asc-cell-empty {
+  height: 52px;
+  background: #ffffff;
+}
+
+.asc-sheet-note {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #333333;
+  text-align: left;
+  line-height: 1.4;
+  padding: 4px 2px;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 8px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.825rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.asc-class-badge {
+  display: inline-block;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #000000;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.asc-teacher-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 0.84rem;
+  color: #374151;
+  flex-wrap: wrap;
+}
+
+.asc-meta-item strong {
+  color: #000000;
+  font-weight: 700;
+}
+
+.asc-meta-divider {
+  color: #9ca3af;
+  font-weight: bold;
+}
+
+/* ========================================== */
+/* PRINT MEDIA STYLESHEET                     */
+/* Guaranteed 100% Single Page Fit (No Breaks) */
+/* ========================================== */
+@media print {
+  @page {
+    size: landscape;
+    margin: 5mm 8mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print,
+  .clean-toolbar,
+  .clean-selector-bar,
+  .clean-clash-warning,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  .app-container,
+  .main-content,
+  .view-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .asc-timetable-sheet {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .asc-sheet-header {
+    margin-bottom: 6px !important;
+  }
+
+  .asc-sheet-title {
+    font-size: 0.95rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .asc-sheet-subtitle {
+    font-size: 1.15rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .asc-teacher-meta {
+    font-size: 0.74rem !important;
+    margin-top: 2px !important;
+    gap: 6px !important;
+  }
+
+  .asc-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    border: 2px solid #000000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .asc-table tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .asc-table th,
+  .asc-table td {
+    border: 1px solid #000000 !important;
+    padding: 0 !important;
+    vertical-align: middle !important;
+  }
+
+  .asc-cell {
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 54px !important;
+    padding: 2px 3px !important;
+  }
+
+  .asc-cell-empty {
+    height: 52px !important;
+  }
+
+  .asc-class-badge {
+    background: transparent !important;
+    border: 1px solid #000000 !important;
+    font-size: 1.05rem !important;
+    font-weight: 900 !important;
+    padding: 1px 4px !important;
+  }
+
+  .asc-break-cell {
+    padding: 2px !important;
+  }
+
+  .asc-vertical-break {
+    gap: 3px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .asc-sheet-note {
+    margin-top: 4px !important;
+    font-size: 0.68rem !important;
+    line-height: 1.2 !important;
+    padding: 0 !important;
+  }
+}
