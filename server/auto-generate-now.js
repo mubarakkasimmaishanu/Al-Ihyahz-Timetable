@@ -14,8 +14,8 @@ const allocations = db.prepare('SELECT * FROM allocations').all();
 const generator = new TimetableGenerator({
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
   regularPeriods: 8,
-  fridayPeriods: 5,
-  maxRestarts: 50
+  fridayPeriods: 6,
+  maxRestarts: 100
 });
 
 const result = generator.generate(classes, teachers, subjects, allocations);

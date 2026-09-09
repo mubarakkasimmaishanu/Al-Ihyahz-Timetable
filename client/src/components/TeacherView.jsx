@@ -101,7 +101,14 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
       'COMMERCE': 'COMM',
       'GOVERNMENT': 'GOVT',
       'BUSINESS STUDIES': 'BUS',
-      'BUSINESS STUDY': 'BUS'
+      'BUSINESS STUDY': 'BUS',
+      'PRE-VOCATIONAL STUDIES': 'PVS',
+      'PRE-VOCATIONAL STUDY': 'PVS',
+      'PVS': 'PVS',
+      'NATIONAL VALUE': 'NV',
+      'NATIONAL VALUES': 'NV',
+      'NATIONAL VALUES EDUCATION': 'NV',
+      'NV': 'NV'
     };
     return map[val] || code || name;
   };

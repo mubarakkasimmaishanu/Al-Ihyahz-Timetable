@@ -76,7 +76,9 @@ export function validateTimetable(slots, classes, teachers, subjects, allocation
     const isGovPhy = (code1 === 'GOV' && code2 === 'PHY') || (code1 === 'PHY' && code2 === 'GOV');
     const isLitChm = (code1 === 'LIT' && (code2 === 'CHM' || code2 === 'CHEM')) || 
                      ((code1 === 'CHM' || code1 === 'CHEM') && code2 === 'LIT');
-    return isGovPhy || isLitChm;
+    const isEcoBio = ((code1 === 'ECO' || code1 === 'ECON') && (code2 === 'BIO' || code2 === 'BIOL')) || 
+                     ((code1 === 'BIO' || code1 === 'BIOL') && (code2 === 'ECO' || code2 === 'ECON'));
+    return isGovPhy || isLitChm || isEcoBio;
   };
 
   // Detect Class Clashes (Two subjects at same time in one class)
@@ -133,6 +135,23 @@ export function validateTimetable(slots, classes, teachers, subjects, allocation
           type: 'LATE_MATH_PLACEMENT',
           severity: 'HIGH',
           message: `Pedagogical Rule Violation: Mathematics is scheduled on ${slot.day}, Period ${slot.period_index} for ${classMap[slot.class_id]?.name || slot.class_id}. Math should never be scheduled in the 2nd to last or last period of the day.`
+        });
+      }
+    }
+  }
+
+  // Detect Pedagogical Rule Violations: English Language scheduled in tired closing periods (Period 8 Mon-Thu, Period 5/6 Friday)
+  for (const slot of slots) {
+    const sub = subjectMap[slot.subject_id];
+    const isEng = sub && ((sub.code || '').toUpperCase() === 'ENG' || (sub.name || '').toUpperCase().includes('ENG'));
+    if (isEng) {
+      const isLastPeriodMonThu = slot.day !== 'Friday' && slot.period_index >= 8;
+      const isLateFriday = slot.day === 'Friday' && slot.period_index >= 5;
+      if (isLastPeriodMonThu || isLateFriday) {
+        warnings.push({
+          type: 'TIRED_HOURS_ENGLISH_PLACEMENT',
+          severity: 'HIGH',
+          message: `Pedagogical Warning: English Language is scheduled on ${slot.day}, Period ${slot.period_index} for ${classMap[slot.class_id]?.name || slot.class_id}. Core language studies should not be assigned during tired closing periods.`
         });
       }
     }

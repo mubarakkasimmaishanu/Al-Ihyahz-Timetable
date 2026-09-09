@@ -20,13 +20,13 @@
    - *Subtotal*: 10 contacts
 
 2. **Data Processing (`DPR`) — Senior Secondary**
-   - SS 1: 3 contacts per week (3 singles across 3 distinct days)
-   - SS 2: 3 contacts per week (3 singles across 3 distinct days)
-   - SS 3: 3 contacts per week (3 singles across 3 distinct days)
-   - *Subtotal*: 9 contacts
+   - SS 1: 4 contacts per week (1 double + 2 singles)
+   - SS 2: 4 contacts per week (1 double + 2 singles)
+   - SS 3: 4 contacts per week (1 double + 2 singles)
+   - *Subtotal*: 12 contacts
 
 ---
 
 ## Total Workload
-* **Total Weekly Contacts**: **19 contacts**
-* **Workload Distribution**: Balanced ~10 morning contacts (53%) and ~9 afternoon contacts (47%).
+* **Total Weekly Contacts**: **22 contacts**
+* **Workload Distribution**: Balanced ~11 morning contacts and ~11 afternoon contacts. Maximum daily limit: 5 periods.

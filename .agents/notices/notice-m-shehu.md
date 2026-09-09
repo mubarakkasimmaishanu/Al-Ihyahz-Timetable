@@ -9,8 +9,9 @@
 
 ## Profile & Key Constraint
 * **Academic Status**: MSc Postgraduate Student.
-* **Scheduling Restriction**: **MORNING ONLY**.
-* **Permitted Periods**: Strictly Periods 1 to 4 (Period 5 immediately after break only permitted as a fallback exception). Must **never** be assigned to Periods 6, 7, or 8.
+* **Scheduling Restriction**: **MORNING ONLY / MAX PERIOD 5**.
+* **Permitted Periods**: Strictly Periods 1 to 4 and Period 5 (immediately after break). Must **never** be assigned to Periods 6, 7, or 8 on any day.
+* **Friday Balance**: Takes Friday morning / P5 contacts to balance his Monday–Thursday schedule so he never exceeds Period 5.
 * **Mathematics Placement**: Math in JS 3 and SS 1 must be placed in the first two periods in the morning (P1, P2) or right after break (P5); never late in the day.
 
 ---

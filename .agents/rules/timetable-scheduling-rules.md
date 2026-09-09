@@ -28,6 +28,11 @@ In Senior Secondary classes (SS 1, SS 2, SS 3), Science and Arts students split 
    - These periods must be scheduled in the exact same time slot for that class.
    - To achieve the required 50/50 balance for both M. Hassan and M. Nana Firdaus, all paired Literature ↔ Chemistry contacts are scheduled in the afternoon (Periods 5–8).
 
+3. **Economics ↔ Biology**:
+   - When **M. Abba** enters to teach **Economics**, students taking Science move simultaneously to their **Biology class** with **M. Amina**.
+   - These periods must be scheduled in the exact same time slot for that class in SS 1, SS 2, and SS 3 (4 contacts each: 1 double + 2 singles).
+   - Scheduled across the week to maintain optimal workload spread and prevent teacher fatigue.
+
 ---
 
 ## 3. Double Periods & Contact Rules
@@ -37,7 +42,7 @@ In Senior Secondary classes (SS 1, SS 2, SS 3), Science and Arts students split 
   - 1 Double period + 2 Single periods across 3 distinct days.
 * **Do Not Add Unnecessarily**: Double periods must not be created indiscriminately. They are only placed where they assist in balancing.
 * **Break Boundary Rule**: Double periods must **NEVER** span across the breakfast break (i.e. Period 4 and Period 5 cannot form a double period).
-* **Friday Paired Doubles Prohibited**: Double periods for paired senior electives (`Government ↔ Physics` and `Literature ↔ Chemistry`) must **NEVER** be placed on Friday. They belong strictly on Monday to Thursday (8-period days).
+* **Friday Paired Doubles Prohibited**: Double periods for paired senior electives (`Government ↔ Physics`, `Literature ↔ Chemistry`, and `Economics ↔ Biology`) must **NEVER** be placed on Friday. They belong strictly on Monday to Thursday (8-period days).
 * **Friday Chemistry / Literature Load Cap**: Friday is a 6-period condensed day. The generator strictly caps Chemistry (and paired Literature) at **at most 1 single period on Friday** (never 2 or 3 periods). The remaining 11 contacts are distributed across Monday to Thursday.
 * **No Subject Stacking**: Avoid assigning the same subject multiple times on the same day unless it is part of a deliberate double period.
 
@@ -61,3 +66,18 @@ In Senior Secondary classes (SS 1, SS 2, SS 3), Science and Arts students split 
   - **First Two Periods in the Morning (Periods 1 & 2)**: Prime cognitive window (8:10 – 9:20 AM) when student mental alertness, logical focus, and retention are at their highest.
   - **Immediately After Breakfast Break (Period 5)**: Post-refreshment window (11:10 – 11:50 AM) when students have rested and replenished their energy.
 * **Secondary Allowed Slots**: Periods 3 and 4 (before break) are acceptable when required for weekly balancing. Period 6 on Monday–Thursday is heavily discouraged.
+
+---
+
+## 6. Light Friday Policy for Heavy Science & Arts Subjects (MANDATORY)
+
+* **Institutional Intent**: Friday is a 6-period condensed day closing early for Juma'at prayer. Students must not be overburdened with cognitively demanding lab or heavy theory electives. Heavy science and art subjects must appear minimally ("appear little") on Friday.
+* **Class Friday Heavy Load Cap**:
+  - Heavy subjects (`PHY`, `CHM`, `BIO`, `MTH`, `GOV`, `LIT`, `ECO`) are strictly capped at **at most 1 single period per class on Friday** (with 0 heavy periods preferred).
+  - Paired electives (`PHY ↔ GOV`, `CHM ↔ LIT`, `ECO ↔ BIO`) are prioritized Monday to Thursday, preventing senior elective clutter on Friday.
+* **Zero Double Periods on Friday**:
+  - All double periods across the entire school are strictly prohibited on Friday. All 2-period contiguous blocks belong on Monday to Thursday (8-period full days).
+* **Zero Subject Stacking on Friday**:
+  - No subject may be scheduled more than once in the same class on Friday. Every Friday contact must be a unique, single period.
+* **Friday Curriculum Focus**:
+  - Friday is prioritized for lighter, vocational, and digital subjects: Computer Studies (`CMP`), Civic Education (`CIV`), Data Processing (`DPR`), Basic Science & Tech (`BST`), Agricultural Science (`AGR`), and fresh morning English Language (`ENG`).

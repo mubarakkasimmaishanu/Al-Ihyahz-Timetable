@@ -66,8 +66,16 @@ export default function ClassView({ classes, teachers = [], allocations = [], sl
       'HAUSA': 'HAUSA',
       'HAUSA LANGUAGE': 'HAUSA',
       'GEOGRAPHY': 'GEO',
-      'COMMERCE': 'COMM',
-      'GOVERNMENT': 'GOVT'
+      'GOVERNMENT': 'GOVT',
+      'BUSINESS STUDIES': 'BUS',
+      'BUSINESS STUDY': 'BUS',
+      'PRE-VOCATIONAL STUDIES': 'PVS',
+      'PRE-VOCATIONAL STUDY': 'PVS',
+      'PVS': 'PVS',
+      'NATIONAL VALUE': 'NV',
+      'NATIONAL VALUES': 'NV',
+      'NATIONAL VALUES EDUCATION': 'NV',
+      'NV': 'NV'
     };
     return map[val] || code || name;
   };

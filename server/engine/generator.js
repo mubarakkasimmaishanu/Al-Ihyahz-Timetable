@@ -6,8 +6,20 @@
 
 const PAIRED_SUBJECT_PAIRS = [
   ['GOV', 'PHY'],
-  ['LIT', 'CHM']
+  ['LIT', 'CHM'],
+  ['ECO', 'BIO']
 ];
+
+const HEAVY_SUBJECT_CODES = new Set(['PHY', 'CHM', 'BIO', 'MTH', 'GOV', 'LIT', 'ECO']);
+
+function isHeavySubject(code, name) {
+  const c = (code || '').toUpperCase();
+  const n = (name || '').toUpperCase();
+  return HEAVY_SUBJECT_CODES.has(c) || 
+         c === 'GOVT' || c === 'CHEM' || c === 'ECON' || c === 'MATHS' ||
+         n.includes('MATH') || n.includes('PHYSIC') || n.includes('CHEM') || 
+         n.includes('BIOL') || n.includes('GOVERN') || n.includes('LITERAT') || n.includes('ECON');
+}
 
 export class TimetableGenerator {
   constructor(options = {}) {
@@ -169,13 +181,15 @@ export class TimetableGenerator {
   _attemptSolve(classes, teachers, subjects, allocations, lockedSlots, stochastic = false) {
     const teacherMap = Object.fromEntries(teachers.map(t => [t.id, t]));
     const subjectMap = Object.fromEntries(subjects.map(s => [s.id, s]));
+    const classMap = Object.fromEntries(classes.map(c => [c.id, c]));
 
     const classSchedule = {};
     const teacherSchedule = {};
-    const classDaySubjectCount = {};
     const teacherDayPeriodCount = {};
     const teacherPeriodCount = {};
+    const classDaySubjectCount = {};
     const classDayPeriodCount = {};
+    const classDayHeavyCount = {};
     const teacherBeforeBreakCount = {};
     const teacherAfterBreakCount = {};
     const classBeforeBreakCount = {};
@@ -185,12 +199,14 @@ export class TimetableGenerator {
       classSchedule[c.id] = {};
       classDaySubjectCount[c.id] = {};
       classDayPeriodCount[c.id] = {};
+      classDayHeavyCount[c.id] = {};
       classBeforeBreakCount[c.id] = 0;
       classAfterBreakCount[c.id] = 0;
       for (const d of this.days) {
         classSchedule[c.id][d] = {};
         classDaySubjectCount[c.id][d] = {};
         classDayPeriodCount[c.id][d] = 0;
+        classDayHeavyCount[c.id][d] = 0;
       }
     }
 
@@ -236,6 +252,10 @@ export class TimetableGenerator {
         (teacherPeriodCount[lock.teacher_id][lock.period_index] || 0) + 1;
       classDayPeriodCount[lock.class_id][lock.day] = 
         (classDayPeriodCount[lock.class_id][lock.day] || 0) + 1;
+      const sub = subjectMap[lock.subject_id];
+      if (isHeavySubject(sub?.code, sub?.name)) {
+        classDayHeavyCount[lock.class_id][lock.day] = (classDayHeavyCount[lock.class_id][lock.day] || 0) + 1;
+      }
 
       if (lock.period_index <= 4) {
         teacherBeforeBreakCount[lock.teacher_id] = (teacherBeforeBreakCount[lock.teacher_id] || 0) + 1;
@@ -410,14 +430,33 @@ export class TimetableGenerator {
               allTeachersFree = false;
               break;
             }
+
+            // MORNING_ONLY Hard Constraint: M. Shehu must NEVER teach in Period 7 or 8!
+            // With Friday 100% free, he teaches up to Period 6 on Mon-Thu (dismissed by 12:30 PM).
+            const teacher = teacherMap[tId];
+            if (teacher && (teacher.time_preference === 'MORNING_ONLY' || teacher.name?.includes('Shehu'))) {
+              if (p > 6 || (p2 && p2 > 6)) {
+                allTeachersFree = false;
+                break;
+              }
+            }
           }
           if (!allTeachersFree) continue;
 
           // 3. Double period rule: NEVER span across break (Break is between Period 4 and Period 5)
           if (unit.duration === 2 && p === 4) continue;
 
-          // 4. Friday Paired Double Rule: Never place paired double periods on Friday (short 6-period day; keep doubles Mon-Thu)
-          if (day === 'Friday' && unit.isPaired && unit.duration === 2) continue;
+          // 4. Friday Double Period Rule: Never place double periods on Friday (condensed 6-period day; keep all doubles Mon-Thu)
+          if (day === 'Friday' && unit.duration === 2) continue;
+
+          // 5. Friday After-Break Senior Only Rule:
+          // Friday after break (Periods 5 & 6) is strictly reserved for Senior Secondary classes (SS 1–3).
+          // Junior Secondary classes (JS 1–3) close at Break (Period 4) on Friday!
+          const targetClass = classMap[unit.class_id];
+          const isJunior = targetClass && (targetClass.level === 'JS' || (targetClass.name && targetClass.name.startsWith('JS')));
+          if (day === 'Friday' && isJunior && (p >= 5 || (p2 && p2 >= 5))) {
+            continue; // Strictly disallow Junior classes after break on Friday
+          }
 
           // Calculate soft score heuristic
           let penalty = 0;
@@ -433,9 +472,9 @@ export class TimetableGenerator {
             }
           }
 
-          // Rule A: Government ↔ Physics must be in the morning (P1–P4/5) with M. Shehu
-          if (isGovPhy && (p > 5 || (p2 && p2 > 5))) {
-            continue; // M. Shehu cannot teach in afternoon
+          // Rule A: Government ↔ Physics must be in the morning / up to period 6 (P1–P6) with M. Shehu
+          if (isGovPhy && (p > 6 || (p2 && p2 > 6))) {
+            continue; // M. Shehu cannot teach in tired afternoon hours (P7/P8)
           }
 
           // Rule B: Literature ↔ Chemistry must be prioritized in the AFTERNOON (Periods 5–8)
@@ -485,8 +524,64 @@ export class TimetableGenerator {
             }
           }
 
-          // 5. Friday Chemistry & Paired Elective load balancing:
-          // Heavily limit / avoid overloading Friday with multiple Chemistry or Literature periods
+          // Rule D: English Language Placement Rules:
+          // Core cognitive subject: "the rule for english is somehow close to math dont assign the period in tired hours"
+          // Avoid tired hours: strictly never assign in the last period (Period 8 on Mon-Thu, Period 6 on Friday)
+          // Heavily avoid 2nd to last period (Period 7 on Mon-Thu, Period 5 on Friday)
+          // Prioritize fresh morning periods (P1–P4) and immediately after break (P5).
+          const isEnglish = !unit.isPaired && unitSubjects.some(sId => {
+            const sub = subjectMap[sId];
+            const code = (sub?.code || '').toUpperCase();
+            const name = (sub?.name || '').toUpperCase();
+            return code === 'ENG' || name.includes('ENG') || name.includes('ENGLISH');
+          });
+
+          if (isEnglish) {
+            // Strict Hard Constraint: Never in tired hours
+            // - On Monday-Thursday: Never Period 8 (last period)
+            // - On Friday: Never Period 5 or Period 6 (after-break / closing periods)
+            if (p >= 8 || (p2 && p2 >= 8)) {
+              continue;
+            }
+            if (day === 'Friday' && (p >= 5 || (p2 && p2 >= 5))) {
+              continue;
+            }
+
+            // Strong Penalty for Period 7 on Mon-Thu (2nd to last tired hour)
+            if (p === 7 || (p2 && p2 === 7)) {
+              penalty += 700;
+            }
+
+            // Reward fresh morning periods (P1–P4) and early post-break (P5)
+            if (p === 1 || p === 2 || p === 5 || p2 === 2) {
+              penalty -= 180;
+            } else if (p === 3 || p === 4) {
+              penalty -= 100;
+            } else if (p === 6) {
+              penalty += 150; // Moderate penalty for late afternoon P6
+            }
+          }
+
+          // 5. Light Friday Rule for Heavy Science / Art Subjects:
+          // User requirement: "avoid too much load for heavy sciene / airt subject on friday just make them appear little"
+          // Heavy subjects (PHY, CHM, BIO, MTH, GOV, LIT, ECO):
+          // - Limit to at most 1 (max 2) periods in any class on Friday
+          // - Strongly favor Monday-Thursday so heavy subjects only appear in minimal numbers on Friday
+          const isHeavyUnit = unit.isPaired || unitSubjects.some(sId => {
+            const sub = subjectMap[sId];
+            return isHeavySubject(sub?.code, sub?.name);
+          });
+
+          if (day === 'Friday' && isHeavyUnit) {
+            const heavyOnFriday = classDayHeavyCount[unit.class_id]?.['Friday'] || 0;
+            if (heavyOnFriday >= 1) {
+              // Strictly at most 1 single period of heavy subject per class on Friday
+              continue;
+            }
+            // Heavy subjects strongly avoid Friday
+            penalty += 5000;
+          }
+
           if (day === 'Friday' && unit.isPaired) {
             let maxCurrentCount = 0;
             for (let i = 0; i < unitTeachers.length; i++) {
@@ -496,19 +591,19 @@ export class TimetableGenerator {
               if (cnt > maxCurrentCount) maxCurrentCount = cnt;
             }
             if (maxCurrentCount >= 1) {
-              // Disallow 2 or more periods of Chemistry (or Literature) on Friday!
+              // Disallow 2 or more periods of Chemistry (or Literature / Physics / Bio) on Friday!
               continue;
             }
-            penalty += 150;
+            penalty += 200;
           }
 
           for (const tId of unitTeachers) {
             const teacher = teacherMap[tId];
-            if (teacher && teacher.time_preference === 'MORNING_ONLY') {
-              if (p > 5 || (p2 && p2 > 5)) {
-                penalty += 1500 * (p - 4); // strictly avoid afternoon periods 6, 7, 8
-              } else if (p === 5) {
-                penalty += 50; // allow period 5 if necessary, but prefer 1-4
+            if (teacher && (teacher.time_preference === 'MORNING_ONLY' || teacher.name?.includes('Shehu'))) {
+              if (p === 6 || p2 === 6) {
+                penalty += 120; // allow period 6 when needed (to fit 22 periods into 4 days), but prefer 1-5
+              } else if (p === 5 || p2 === 5) {
+                penalty += 30; // prefer 1-4
               }
             } else {
               // General Rule: 50/50 balance across Before Break (P1-P4) and After Break (P5-P8)
@@ -549,15 +644,85 @@ export class TimetableGenerator {
             }
           }
 
-          // Avoid clustering same subject on same day in class
+          // Avoid clustering same subject on same day in class unless it is a deliberate double period
           for (const sId of unitSubjects) {
             const exCount = classDaySubjectCount[unit.class_id][day][sId] || 0;
-            if (exCount > 0) penalty += 80;
+            if (exCount > 0) {
+              if (day === 'Friday') {
+                // Strictly avoid repeating the same subject on Friday (short 6-period day)
+                penalty += 2000;
+              } else {
+                penalty += 600;
+              }
+            }
           }
 
-          // Class daily load balancing
+          // Class daily load balancing & even distribution across the week
           const classDaily = classDayPeriodCount[unit.class_id]?.[day] || 0;
-          penalty += classDaily * 10;
+          if (day !== 'Friday') {
+            if (isJunior) {
+              // Junior classes have 29-32 periods. Target on Mon-Thu is strictly 6-7 periods/day.
+              if (classDaily + unit.duration > 7) {
+                penalty += 2000 * (classDaily + unit.duration - 7);
+              } else if (classDaily < 5) {
+                // Reward under-loaded days to prevent empty afternoon days (e.g. avoid 3-period days)
+                penalty -= 300;
+              }
+            } else {
+              // Senior classes have 35 periods. Target on Mon-Thu is 7-8 periods/day.
+              if (classDaily + unit.duration > 8) {
+                penalty += 2500;
+              } else if (classDaily < 6) {
+                penalty -= 200;
+              }
+            }
+          } else {
+            // Friday: Junior classes max 4 periods (P1-P4). Senior classes max 6 periods (P1-P6).
+            const maxFri = isJunior ? 4 : 6;
+            if (classDaily + unit.duration > maxFri) {
+              penalty += 5000 * (classDaily + unit.duration - maxFri);
+            }
+          }
+
+          // Schedule Compactness & Gap Prevention (Strictly eliminate random empty periods in middle of student day):
+          // Reward filling Period 1 (opening bell)
+          if (p === 1) {
+            penalty -= 200;
+          } else if (!classSchedule[unit.class_id][day][1]) {
+            // Penalize filling later periods when Period 1 is still empty!
+            penalty += 450;
+          }
+
+          // If this class currently has 0 periods placed on this day, heavily penalize starting late
+          const dayPeriodsInClass = Object.keys(classSchedule[unit.class_id][day]).length;
+          if (dayPeriodsInClass === 0 && p > 1) {
+            penalty += (p - 1) * 700;
+          }
+
+          let gapsBefore = 0;
+          for (let prevP = 1; prevP < p; prevP++) {
+            if (!classSchedule[unit.class_id][day][prevP]) {
+              gapsBefore++;
+            }
+          }
+          if (gapsBefore > 0) {
+            penalty += gapsBefore * 450;
+          }
+
+          // Discourage jumping over an empty period
+          if (p > 1 && !classSchedule[unit.class_id][day][p - 1]) {
+            penalty += 500;
+          }
+
+          // Junior classes: discourage period 8 on Mon-Thu so their schedule ends naturally by P6 or P7
+          if (isJunior && day !== 'Friday' && (p === 8 || (p2 && p2 === 8))) {
+            penalty += 900;
+          }
+
+          // Reward consecutive periods
+          if (p > 1 && classSchedule[unit.class_id][day][p - 1]) {
+            penalty -= 200;
+          }
 
           if (stochastic) {
             penalty += Math.floor(Math.random() * 10);
@@ -623,6 +788,7 @@ export class TimetableGenerator {
             (teacherDaySubjectCount[unit.allocB.teacher_id][chosen.day][unit.allocB.subject_id] || 0) + 1;
 
           classDayPeriodCount[unit.class_id][chosen.day] = (classDayPeriodCount[unit.class_id][chosen.day] || 0) + 1;
+          classDayHeavyCount[unit.class_id][chosen.day] = (classDayHeavyCount[unit.class_id][chosen.day] || 0) + 1;
           if (periodIdx <= 4) {
             classBeforeBreakCount[unit.class_id] = (classBeforeBreakCount[unit.class_id] || 0) + 1;
           } else {
@@ -662,6 +828,10 @@ export class TimetableGenerator {
           }
 
           classDayPeriodCount[unit.class_id][chosen.day] = (classDayPeriodCount[unit.class_id][chosen.day] || 0) + 1;
+          const sub = subjectMap[unit.alloc.subject_id];
+          if (isHeavySubject(sub?.code, sub?.name)) {
+            classDayHeavyCount[unit.class_id][chosen.day] = (classDayHeavyCount[unit.class_id][chosen.day] || 0) + 1;
+          }
           placedSlots.push(slot);
         }
       }

@@ -15,6 +15,11 @@ This project manages the conflict-free timetable scheduling engine and official 
 > * **M. Nana Firdaus**
 > * **M. Yusuf**
 > * **M. Zainab Kabir**
+> * **M. Sumayya**
+> * **M. Abba**
+* **M. Amina**
+* **M. Maryam**
+* **M. Nabila**
 
 See full details in [.agents/rules/teacher-naming-rules.md](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/rules/teacher-naming-rules.md).
 
@@ -26,8 +31,10 @@ See full details in [.agents/rules/teacher-naming-rules.md](file:///c:/Users/MY%
 * **Paired Electives**:
   - `Government ↔ Physics` (M. Hassan & M. Shehu in SS 1–SS 3, morning).
   - `Literature ↔ Chemistry` (M. Hassan & M. Nana Firdaus in SS 1–SS 3, afternoon).
+  - `Economics ↔ Biology` (M. Abba & M. Amina in SS 1–SS 3, balanced).
 * **Double Periods**: 1 double + 2 singles for 4-contact subjects; never span across break (P4–P5).
-* **Mathematics Placement Rule**: NEVER schedule Math in the 2nd to last or last period (never P7 or P8 on Mon–Thu; never P5 or P6 on Friday). Math is highly encouraged in the first two periods in the morning (P1, P2) and immediately after break (P5).
+* **Mathematics & English Placement Rule**: NEVER schedule Math or English in tired hours (no Math in P7 or P8 on Mon–Thu, no Math in P5 or P6 on Friday; no English in P8 on Mon–Thu or P5/P6 on Friday). Both subjects are prioritized in the first two periods in the morning (P1, P2) and immediately after break (P5).
+* **Light Friday Policy for Heavy Subjects**: Heavy science and art subjects (`PHY`, `CHM`, `BIO`, `MTH`, `GOV`, `LIT`, `ECO`) must appear minimally on Friday (at most 1 single period per class). Strictly ZERO double periods and ZERO subject stacking on Friday.
 * **No Clashes & Contact Preservation**: Full weekly contacts must be preserved; never silently drop periods.
 
 See full details in [.agents/rules/timetable-scheduling-rules.md](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/rules/timetable-scheduling-rules.md) and [.agents/rules/general-allocation-rules.md](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/rules/general-allocation-rules.md).
@@ -43,6 +50,11 @@ Consult each teacher's dedicated notice file before adjusting allocations or sch
 * [Notice: M. Nana Firdaus](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-nana-firdaus.md) (24 contacts, paired Chem/BST)
 * [Notice: M. Yusuf](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-yusuf.md) (10 contacts, Maths SS 2 & SS 3)
 * [Notice: M. Zainab Kabir](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-zainab-kabir.md) (24 contacts, Friday Absent / Free, English & Business Studies JS 1–3)
+* [Notice: M. Sumayya](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-sumayya.md) (24 contacts, English SS 1–3 & Computer JS 1–3, Protected from Tired Hours)
+* [Notice: M. Abba](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-abba.md) (21 contacts, Economics SS 1–3 paired w/ Bio & Civic SS 1–3)
+* [Notice: M. Amina](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-amina.md) (24 contacts, Biology SS 1–3 paired w/ Eco & Agric SS 1–3)
+* [Notice: M. Maryam](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-maryam.md) (18 contacts, PVS JS 1–3 & National Value JS 1–3)
+* [Notice: M. Nabila](file:///c:/Users/MY%20PC/Desktop/Al-Ihyahz%20Timetable/.agents/notices/notice-m-nabila.md) (21 contacts, IRS SS 1–3, Hausa JS 1–3 & IRS JS 2)
 
 ---
 
