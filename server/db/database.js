@@ -114,8 +114,7 @@ export function initDatabase() {
     {
       key: 'period_times',
       value: JSON.stringify([
-        { period: 0, type: 'assembly', name: 'ASSEMBLY', start: '7:40', end: '8:10' },
-        { period: 1, start: '8:10', end: '8:40', label: '1' },
+        { period: 1, start: '8:00', end: '8:40', label: '1', note: 'Assembly on Mon & Fri (8:00-8:40)' },
         { period: 2, start: '8:40', end: '9:20', label: '2' },
         { period: 3, start: '9:20', end: '10:00', label: '3' },
         { period: 4, start: '10:00', end: '10:40', label: '4' },

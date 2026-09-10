@@ -20,8 +20,7 @@ export function seedDatabase() {
   db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('regular_periods_per_day', '8')").run();
   db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('friday_periods_per_day', '6')").run();
   db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('period_times', ?)").run(JSON.stringify([
-    { period: 0, type: 'assembly', name: 'ASSEMBLY', start: '7:40', end: '8:10' },
-    { period: 1, start: '8:10', end: '8:40', label: '1' },
+    { period: 1, start: '8:00', end: '8:40', label: '1', note: 'Assembly on Mon & Fri (8:00-8:40)' },
     { period: 2, start: '8:40', end: '9:20', label: '2' },
     { period: 3, start: '9:20', end: '10:00', label: '3' },
     { period: 4, start: '10:00', end: '10:40', label: '4' },
@@ -63,7 +62,7 @@ export function seedDatabase() {
     { name: 'M. Sumayya', code: 'MSM', phone: '08037788990', max_daily_periods: 5, time_preference: 'ANY', unavailable_days: '[]' },
     { name: 'M. Abba', code: 'MAB', phone: '08038899001', max_daily_periods: 5, time_preference: 'ANY', unavailable_days: '[]' },
     { name: 'M. Amina', code: 'MAM', phone: '08039900112', max_daily_periods: 5, time_preference: 'ANY', unavailable_days: '[]' },
-    { name: 'M. Maryam', code: 'MMY', phone: '08031122445', max_daily_periods: 5, time_preference: 'ANY', unavailable_days: '[]' },
+    { name: 'M. Maryam', code: 'MMY', phone: '08031122445', max_daily_periods: 6, time_preference: 'ANY', unavailable_days: '[]' },
     { name: 'M. Nabila', code: 'MNB', phone: '08031122556', max_daily_periods: 5, time_preference: 'ANY', unavailable_days: '[]' }
   ];
 
@@ -153,17 +152,17 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #2: M. MUBARAK
-  // Total = 22 periods / week
+  // Total = 19 periods / week
   // =========================================================================
   addAlloc('JS 1', 'MTH', 'MMB', 5, 2);
   addAlloc('JS 2', 'MTH', 'MMB', 5, 2);
-  addAlloc('SS 1', 'DPR', 'MMB', 4, 1);
-  addAlloc('SS 2', 'DPR', 'MMB', 4, 1);
-  addAlloc('SS 3', 'DPR', 'MMB', 4, 1);
+  addAlloc('SS 1', 'DPR', 'MMB', 3, 0);
+  addAlloc('SS 2', 'DPR', 'MMB', 3, 0);
+  addAlloc('SS 3', 'DPR', 'MMB', 3, 0);
 
   // =========================================================================
   // TEACHER #3: M. HASSAN
-  // Total = 24 periods / week (12 morning GOV paired w/ PHY, 12 afternoon LIT paired w/ CHM)
+  // Total = 24 periods / week (12 morning GOV paired w/ PHY, 12 LIT paired w/ BIO)
   // =========================================================================
   addAlloc('SS 1', 'GOV', 'MHN', 4, 1);
   addAlloc('SS 2', 'GOV', 'MHN', 4, 1);
@@ -174,7 +173,7 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #4: M. NANA FIRDAUS
-  // Total = 24 periods / week (12 morning BST, 12 afternoon CHM paired w/ LIT)
+  // Total = 24 periods / week (12 morning BST, 12 CHM paired w/ ECO)
   // =========================================================================
   addAlloc('SS 1', 'CHM', 'MNF', 4, 1);
   addAlloc('SS 2', 'CHM', 'MNF', 4, 1);
@@ -215,7 +214,7 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #8: M. ABBA
-  // Total = 24 periods / week (12 Economics paired w/ Biology in SS 1-3 + 12 Civic in SS 1-3)
+  // Total = 24 periods / week (12 Economics paired w/ Chemistry in SS 1-3 + 12 Civic in SS 1-3)
   // Balanced Workload (max 5/day)
   // =========================================================================
   addAlloc('SS 1', 'ECO', 'MAB', 4, 1);
@@ -227,7 +226,7 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #9: M. AMINA
-  // Total = 24 periods / week (12 Biology paired w/ Economics in SS 1-3 + 12 Agric in SS 1-3)
+  // Total = 24 periods / week (12 Biology paired w/ Literature in SS 1-3 + 12 Agric in SS 1-3)
   // Balanced Workload 50/50 before/after break (max 5/day)
   // =========================================================================
   addAlloc('SS 1', 'BIO', 'MAM', 4, 1);
@@ -239,8 +238,10 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #10: M. MARYAM
-  // Total = 18 periods / week (9 Pre-Vocational Studies in JS 1-3 + 9 National Value in JS 1-3)
-  // Balanced Workload (max 5/day)
+  // Total = 24 periods / week:
+  // - Pre-Vocational Studies in JS 1-3 (3 contacts each = 9)
+  // - National Values in JS 1-3 (3 contacts each = 9)
+  // - Islamic Studies (IRS) in JS 1 and JS 3 (3 contacts each = 6)
   // =========================================================================
   addAlloc('JS 1', 'PVS', 'MMY', 3, 0);
   addAlloc('JS 2', 'PVS', 'MMY', 3, 0);
@@ -248,6 +249,8 @@ export function seedDatabase() {
   addAlloc('JS 1', 'NV', 'MMY', 3, 0);
   addAlloc('JS 2', 'NV', 'MMY', 3, 0);
   addAlloc('JS 3', 'NV', 'MMY', 3, 0);
+  addAlloc('JS 1', 'IRS', 'MMY', 3, 0);
+  addAlloc('JS 3', 'IRS', 'MMY', 3, 0);
 
   // =========================================================================
   // TEACHER #11: M. NABILA
@@ -287,7 +290,7 @@ export function seedDatabase() {
     days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     regularPeriods: 8,
     fridayPeriods: 6,
-    maxRestarts: 40
+    maxRestarts: 300
   });
 
   const result = generator.generate(dbClasses, dbTeachers, dbSubjects, dbAllocations);

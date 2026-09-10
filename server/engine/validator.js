@@ -3,7 +3,7 @@
  */
 
 export function validateTimetable(slots, classes, teachers, subjects, allocations, options = {}) {
-  const fridayPeriods = options.fridayPeriods || 6;
+  const fridayPeriods = options.fridayPeriods || 4;
   const regularPeriods = options.regularPeriods || 8;
 
   const teacherMap = Object.fromEntries(teachers.map(t => [t.id, t]));
@@ -22,14 +22,28 @@ export function validateTimetable(slots, classes, teachers, subjects, allocation
 
   for (const slot of slots) {
     const { teacher_id, class_id, subject_id, day, period_index } = slot;
+    const cls = classMap[class_id];
+    const isJunior = cls && (cls.name?.startsWith('JS') || cls.level === 'JS');
+
+    // Check Monday and Friday Period 1 Assembly reservation
+    if ((day === 'Monday' || day === 'Friday') && period_index === 1) {
+      conflicts.push({
+        type: 'ASSEMBLY_VIOLATION',
+        severity: 'CRITICAL',
+        message: `CLASH: Class "${cls?.name || class_id}" has a subject scheduled on ${day} Period 1, which is reserved for school assembly!`
+      });
+    }
 
     // Check Friday period bounds
-    if (day === 'Friday' && period_index > fridayPeriods) {
-      conflicts.push({
-        type: 'FRIDAY_OVERFLOW',
-        severity: 'CRITICAL',
-        message: `Period ${period_index} is scheduled on Friday for class "${classMap[class_id]?.name || class_id}", but Friday closes after period ${fridayPeriods} for Juma'at prayer.`
-      });
+    if (day === 'Friday') {
+      const maxAllowedFri = isJunior ? 4 : fridayPeriods;
+      if (period_index > maxAllowedFri) {
+        conflicts.push({
+          type: 'FRIDAY_OVERFLOW',
+          severity: 'CRITICAL',
+          message: `Period ${period_index} is scheduled on Friday for class "${cls?.name || class_id}", but Friday closes after period ${maxAllowedFri} for Juma'at prayer.`
+        });
+      }
     }
 
     // 1. Teacher occupancy check
@@ -74,11 +88,16 @@ export function validateTimetable(slots, classes, teachers, subjects, allocation
     const code1 = (subjectMap[sId1]?.code || subjectMap[sId1]?.name || '').toUpperCase();
     const code2 = (subjectMap[sId2]?.code || subjectMap[sId2]?.name || '').toUpperCase();
     const isGovPhy = (code1 === 'GOV' && code2 === 'PHY') || (code1 === 'PHY' && code2 === 'GOV');
+    const isChmEco = ((code1 === 'CHM' || code1 === 'CHEM') && (code2 === 'ECO' || code2 === 'ECON')) || 
+                     ((code1 === 'ECO' || code1 === 'ECON') && (code2 === 'CHM' || code2 === 'CHEM'));
+    const isBioLit = ((code1 === 'BIO' || code1 === 'BIOL') && code2 === 'LIT') || 
+                     (code1 === 'LIT' && (code2 === 'BIO' || code2 === 'BIOL'));
+    // Legacy support
     const isLitChm = (code1 === 'LIT' && (code2 === 'CHM' || code2 === 'CHEM')) || 
                      ((code1 === 'CHM' || code1 === 'CHEM') && code2 === 'LIT');
     const isEcoBio = ((code1 === 'ECO' || code1 === 'ECON') && (code2 === 'BIO' || code2 === 'BIOL')) || 
                      ((code1 === 'BIO' || code1 === 'BIOL') && (code2 === 'ECO' || code2 === 'ECON'));
-    return isGovPhy || isLitChm || isEcoBio;
+    return isGovPhy || isChmEco || isBioLit || isLitChm || isEcoBio;
   };
 
   // Detect Class Clashes (Two subjects at same time in one class)

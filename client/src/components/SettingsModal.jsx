@@ -15,7 +15,7 @@ export default function SettingsModal({
     academic_session: '',
     current_term: '',
     regular_periods_per_day: 8,
-    friday_periods_per_day: 5
+    friday_periods_per_day: 4
   });
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function SettingsModal({
         academic_session: settings.academic_session || '2026/2027 Academic Session',
         current_term: settings.current_term || 'First Term',
         regular_periods_per_day: Number(settings.regular_periods_per_day || 8),
-        friday_periods_per_day: Number(settings.friday_periods_per_day || 5)
+        friday_periods_per_day: Number(settings.friday_periods_per_day || 4)
       });
     }
   }, [settings, isOpen]);
@@ -130,7 +130,7 @@ export default function SettingsModal({
                   value={formData.friday_periods_per_day}
                   onChange={(e) => setFormData({ ...formData, friday_periods_per_day: Number(e.target.value) })}
                 />
-                <small style={{ color: '#64748b' }}>Closes early at 12:00 PM for Juma'at (5 periods)</small>
+                <small style={{ color: '#64748b' }}>Closes at Break for Juma'at (4 periods strictly before break)</small>
               </div>
             </div>
           </div>

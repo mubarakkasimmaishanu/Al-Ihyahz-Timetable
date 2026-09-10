@@ -8,15 +8,18 @@
 ---
 
 ## Profile & Key Constraints
-* **Humanities & Religious Studies**:
-  - Islamic Studies (`IRS`) across Senior Secondary (SS 1–SS 3) and Junior Secondary 2 (`JS 2`).
+* **Humanities & Religious Studies Specialist**:
+  - Islamic Studies (`IRS`) across Senior Secondary (SS 1–SS 3) and Junior Secondary 2 (`JS 2 only`).
   - Hausa Language (`HAUSA`) across Junior Secondary (JS 1–JS 3).
-* **Workload & Burnout Prevention**:
+* **Workload & Institutional Policy**:
   - Weekly Load: **21 contacts** evenly spread across Monday to Friday (approx. 4 to 5 periods per day).
-  - Balanced ~50/50 before break (Periods 1–4) and after break (Periods 5–8).
+  - Balanced before break (Periods 1–4) and after break (Periods 5–8).
   - Maximum daily load: 5 periods per day.
+  - Strict compliance with max 24 load ceiling.
 * **Period Structure**:
-  - All 3-contact subjects: 3 single periods per class spread across distinct days.
+  - Senior IRS (`SS 1–3`): 3 single periods per class spread across distinct days.
+  - Hausa Language (`JS 1–3`): 3 single periods per class spread across distinct days.
+  - Junior IRS (`JS 2 only`): 3 single periods per class spread across distinct days.
   - Zero double periods on Friday (Light Friday policy).
 
 ---
@@ -43,5 +46,5 @@
 ## Total Workload
 * **Total Weekly Contacts**: **21 contacts**
 * **Workload Distribution**:
-  - 12 contacts in Islamic Studies + 9 contacts in Hausa Language
-  - Balanced 50/50 before and after breakfast break
+  - 9 contacts in Senior Islamic Studies (SS 1–3) + 9 contacts in Hausa Language (JS 1–3) + 3 contacts in Junior Islamic Studies (JS 2 only).
+  - Balanced 50/50 before and after breakfast break.

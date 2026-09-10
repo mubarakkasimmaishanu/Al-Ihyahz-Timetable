@@ -148,16 +148,16 @@ def generate_pdf():
 
     notes_map = {
         "M. Shehu": "<b>100% Free on Friday</b> (0 periods). Mon–Thu morning only (P1–P6, dismissed by 12:30 PM). Zero P7–P8.",
-        "M. Mubarak": "Even 50/50 balance before & after break. DPR SS 1–3 (4 contacts each) + JS 1–2 Maths.",
-        "M. Hassan": "Gov paired w/ Physics (morning, M. Shehu); Literature paired w/ Chemistry (afternoon, M. Firdaus).",
-        "M. Nana Firdaus": "Chemistry paired w/ Literature (afternoon); BST JS 1–3 balanced before/after break.",
+        "M. Mubarak": "Even 50/50 balance before & after break. DPR SS 1–3 (3 contacts each, 9p total) + JS 1–2 Maths (10p). Total: 19p.",
+        "M. Hassan": "Gov paired w/ Physics (morning, M. Shehu); Literature paired w/ Biology (M. Amina).",
+        "M. Nana Firdaus": "Chemistry paired w/ Economics (M. Abba, protected from P8); BST JS 1–3 balanced before/after break.",
         "M. Yusuf": "Part-time Senior Math specialist (SS 2 & SS 3). Highest concentration in early morning.",
         "M. Zainab Kabir": "<b>100% Free on Friday</b> (Official Day Off). Mon–Thu 6 periods/day. English JS 1–3 + Business JS 1–3.",
         "M. Sumayya": "Senior English Language SS 1–3 (protected from tired hours: no P8 on Mon–Thu, no P5/6 on Fri) + JS Computer.",
-        "M. Abba": "<b>Strictly Senior Secondary (ZERO JSS)</b>. Civic SS 1–3 (4 contacts each) + Economics paired w/ Biology.",
-        "M. Amina": "Agricultural Science SS 1–3 (4 contacts each) + Biology SS 1–3 paired w/ Economics.",
-        "M. Maryam": "Junior specialist: Pre-Vocational Studies JS 1–3 + National Values JS 1–3. Balanced load.",
-        "M. Nabila": "Hausa Language JS 1–3 + Islamic Religious Studies (JS 2, SS 1, SS 2, SS 3)."
+        "M. Abba": "<b>Strictly Senior Secondary (ZERO JSS)</b>. Civic SS 1–3 (4 contacts each) + Economics paired w/ Chemistry (M. Nana Firdaus).",
+        "M. Amina": "Agricultural Science SS 1–3 (4 contacts each) + Biology SS 1–3 paired w/ Literature (M. Hassan).",
+        "M. Maryam": "Junior specialist: National Values JS 1–3 (3 contacts each, 9p) + Pre-Vocational Studies JS 1–3 (9p) + Islamic Studies JS 1 & JS 3 (6p). Total: 24p.",
+        "M. Nabila": "Hausa Language JS 1–3 (9p) + Senior Islamic Studies SS 1–3 (9p) + Junior Islamic Studies JS 2 only (3p). Total: 21p."
     }
 
     grand_total_load = 0
@@ -249,7 +249,7 @@ def generate_pdf():
 
     # Section 2: Subject-by-Subject Detailed Contact Breakdown
     elements.append(Paragraph("2. Detailed Allocation Breakdown by Subject & Class", h2_style))
-    elements.append(Paragraph("Complete inventory of all 61 active teaching assignments across Junior & Senior Secondary sections.", meta_style))
+    elements.append(Paragraph("Complete inventory of all 63 active teaching assignments across Junior & Senior Secondary sections.", meta_style))
     elements.append(Spacer(1, 8))
 
     detail_headers = [
@@ -283,17 +283,17 @@ def generate_pdf():
         # Classification note
         classif = "General Core"
         if s_code in ['PHY', 'GOV']:
-            classif = "Paired Elective (Gov ↔ Phy, Morning)"
-        elif s_code in ['CHM', 'LIT']:
-            classif = "Paired Elective (Lit ↔ Chem, Afternoon)"
-        elif s_code in ['BIO', 'ECO']:
-            classif = "Paired Elective (Eco ↔ Bio, Balanced)"
+            classif = "Paired Elective (Gov ↔ Phy, Heavy w/ Heavy, Morning)"
+        elif s_code in ['CHM', 'ECO']:
+            classif = "Paired Elective (Chem ↔ Eco, Less Heavy w/ Less Heavy)"
+        elif s_code in ['BIO', 'LIT']:
+            classif = "Paired Elective (Bio ↔ Lit, Less Heavy w/ Less Heavy)"
         elif s_code in ['MTH', 'ENG']:
             classif = "Core Protected (P1/P2/P5 Priority; No tired hours)"
         elif s_code == 'CIV':
             classif = "Senior Core (SS 1–3 Strictly; Zero JSS)"
         elif s_code == 'DPR':
-            classif = "Senior Core (SS 1–3, 4 contacts each)"
+            classif = "Senior Core (SS 1–3, 3 contacts each)"
         elif s_code == 'AGR':
             classif = "Senior Core (SS 1–3, 4 contacts each)"
 

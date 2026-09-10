@@ -190,31 +190,25 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
 
       {/* Timetable Sheet */}
       <div className="asc-timetable-sheet" id="printable-teacher-sheet">
-        {/* Sheet Title */}
+        {/* Header */}
         <div className="asc-sheet-header">
           <div className="asc-sheet-title">
             {schoolTitle} {sessionText}
           </div>
           <div className="asc-sheet-subtitle">
-            Teacher {currentTeacher.name} {currentTeacher.code ? `(${currentTeacher.code})` : ''}
+            Teacher Timetable: {currentTeacher.name} ({currentTeacher.code})
           </div>
           <div className="asc-teacher-meta">
             <span className="asc-meta-item">
-              <strong>Classes:</strong> {teacherClasses.length > 0 ? teacherClasses.join(', ') : 'None'}
+              <strong>Official Name:</strong> {currentTeacher.name}
             </span>
             <span className="asc-meta-divider">•</span>
             <span className="asc-meta-item">
-              <strong>Weekly Load:</strong> {teacherSlots.length} Periods
+              <strong>Weekly Workload:</strong> {teacherSlots.length} Periods
             </span>
             <span className="asc-meta-divider">•</span>
             <span className="asc-meta-item">
-              <strong>Schedule:</strong> {
-                currentTeacher.time_preference === 'MORNING_ONLY'
-                  ? 'Morning Only (P1–P4/5)'
-                  : (currentTeacher.unavailable_days && currentTeacher.unavailable_days.includes('Friday')
-                      ? 'Mon–Thu (Friday Free)'
-                      : 'Balanced (P1–P8)')
-              }
+              <strong>Schedule:</strong> {currentTeacher.name.includes('Shehu') ? 'Morning Only (Free Friday)' : (currentTeacher.name.includes('Zainab') ? 'Mon–Thu (Free Friday)' : 'Regular (Balanced)')}
             </span>
           </div>
         </div>
@@ -222,33 +216,26 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
         {/* The Table Grid with rigid Column Widths to never break */}
         <table className="asc-table">
           <colgroup>
-            <col style={{ width: '6%' }} />
-            <col style={{ width: '5%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
+            <col style={{ width: '7%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
             <col style={{ width: '4%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
             <col style={{ width: '5%' }} />
           </colgroup>
           <thead>
             <tr>
               <th className="asc-th-day">DAY</th>
 
-              {/* Assembly Column (7:40 - 8:10) */}
-              <th className="asc-th-assembly">
-                <div className="asc-period-number">Ass.</div>
-                <div className="asc-period-time">7:40-8:10</div>
-              </th>
-              
               {/* Period 1 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">1</div>
-                <div className="asc-period-time">8:10-8:40</div>
+                <div className="asc-period-time">8:00-8:40</div>
               </th>
 
               {/* Period 2 */}
@@ -308,24 +295,12 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
           </thead>
           <tbody>
             {days.map((d, index) => {
-              const isFri = d.full === 'Friday';
-              const isMonOrFri = d.full === 'Monday' || d.full === 'Friday';
-
               return (
                 <tr key={d.full}>
                   {/* Short Day Column */}
                   <td className="asc-day-label">
                     {d.short}
                   </td>
-
-                  {/* Assembly Column (Monday and Friday) */}
-                  {isMonOrFri ? (
-                    <td className="asc-assembly-cell">
-                      Ass.
-                    </td>
-                  ) : (
-                    <td className="asc-assembly-empty"></td>
-                  )}
 
                   {/* Periods 1 to 4 */}
                   {renderPeriodRange(d.full, 1, 4)}
@@ -343,18 +318,8 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
                     </td>
                   )}
 
-                  {/* After Break */}
-                  {isFri ? (
-                    <>
-                      {/* Friday has just 2 periods after break (Periods 5 & 6) */}
-                      {renderPeriodRange('Friday', 5, 6)}
-                      {/* Periods 7 & 8 are empty on Friday */}
-                      <td colSpan={2} className="asc-cell-empty"></td>
-                    </>
-                  ) : (
-                    /* Mon-Thu: Periods 5 to 8 */
-                    renderPeriodRange(d.full, 5, 8)
-                  )}
+                  {/* After Break: Periods 5 to 8 */}
+                  {renderPeriodRange(d.full, 5, 8)}
 
                   {/* Sweeping Column */}
                   <td className="asc-sweeping-cell">
@@ -368,7 +333,7 @@ export default function TeacherView({ teachers, classes = [], allocations = [], 
 
         {/* Clean Note Under the Table */}
         <div className="asc-sheet-note">
-          * Note: Friday periods are 30 mins each (P1: 8:10–8:40, P2: 8:40–9:10, P3: 9:10–9:40, P4: 9:40–10:10, Break: 10:10–10:40, P5: 10:40–11:10, P6: 11:10–11:40, Sweep: 11:40–11:50). School closes after Period 6 for Juma'at Prayers & Dismissal.
+          * Note: On Friday, school operates strictly Periods 1–4 before break (P1: 8:10–8:40, P2: 8:40–9:10, P3: 9:10–9:40, P4: 9:40–10:10, Break: 10:10–10:40, Sweep: 10:40–10:50). School closes at Break (Period 4) for Juma'at Prayers &amp; Dismissal.
         </div>
       </div>
     </div>

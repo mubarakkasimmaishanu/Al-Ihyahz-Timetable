@@ -14,12 +14,22 @@ const allocations = db.prepare('SELECT * FROM allocations').all();
 const generator = new TimetableGenerator({
   days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
   regularPeriods: 8,
-  fridayPeriods: 6,
-  maxRestarts: 100
+  fridayPeriods: 4,
+  maxRestarts: 300
 });
 
-const result = generator.generate(classes, teachers, subjects, allocations);
-if (result.success) {
+let result = null;
+let attempt = 0;
+while (attempt < 5) {
+  attempt++;
+  console.log(`Generation attempt #${attempt}...`);
+  result = generator.generate(classes, teachers, subjects, allocations);
+  if (result.success && result.slots.length === 240) {
+    break;
+  }
+}
+
+if (result && result.success) {
   db.exec('DELETE FROM timetable_slots WHERE is_locked = 0;');
   const insertSlot = db.prepare(`
     INSERT INTO timetable_slots (class_id, subject_id, teacher_id, day, period_index, is_locked)
@@ -28,7 +38,7 @@ if (result.success) {
   for (const slot of result.slots) {
     insertSlot.run(slot.class_id, slot.subject_id, slot.teacher_id, slot.day, slot.period_index, 0);
   }
-  console.log(`Saved ${result.slots.length} conflict-free timetable slots.`);
+  console.log(`SUCCESS! Saved ${result.slots.length} conflict-free timetable slots.`);
 } else {
-  console.error('Failed to generate timetable:', result.diagnostics);
+  console.error('Failed to generate timetable:', result ? result.diagnostics : 'Unknown');
 }

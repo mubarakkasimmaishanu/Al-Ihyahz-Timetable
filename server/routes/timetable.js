@@ -43,13 +43,13 @@ router.post('/generate', (req, res) => {
 
     // Fetch settings for periods
     const regularPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'regular_periods_per_day'").get()?.value || 8);
-    const fridayPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'friday_periods_per_day'").get()?.value || 6);
+    const fridayPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'friday_periods_per_day'").get()?.value || 4);
 
     const generator = new TimetableGenerator({
       days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       regularPeriods,
       fridayPeriods,
-      maxRestarts: 50
+      maxRestarts: 200
     });
 
     const result = generator.generate(classes, teachers, subjects, allocations, lockedSlots);
@@ -106,7 +106,7 @@ router.get('/validate', (req, res) => {
     const allocations = db.prepare('SELECT * FROM allocations').all();
 
     const regularPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'regular_periods_per_day'").get()?.value || 8);
-    const fridayPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'friday_periods_per_day'").get()?.value || 5);
+    const fridayPeriods = Number(db.prepare("SELECT value FROM settings WHERE key = 'friday_periods_per_day'").get()?.value || 4);
 
     const validation = validateTimetable(slots, classes, teachers, subjects, allocations, {
       fridayPeriods,

@@ -160,33 +160,26 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
         {/* Master Table Grid */}
         <table className="asc-table">
           <colgroup>
-            <col style={{ width: '8%' }} />
-            <col style={{ width: '5%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
+            <col style={{ width: '7%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
             <col style={{ width: '4%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '10%' }} />
-            <col style={{ width: '9%' }} />
-            <col style={{ width: '9%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
+            <col style={{ width: '10.5%' }} />
             <col style={{ width: '5%' }} />
           </colgroup>
           <thead>
             <tr>
               <th className="asc-th-day">{viewMode === 'TEACHERS' ? 'TEACHER' : 'CLASS'}</th>
               
-              {/* Assembly Column (7:40 - 8:10) */}
-              <th className="asc-th-assembly">
-                <div className="asc-period-number">Ass.</div>
-                <div className="asc-period-time">7:40-8:10</div>
-              </th>
-
               {/* Period 1 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">1</div>
-                <div className="asc-period-time">8:10-8:40</div>
+                <div className="asc-period-time">8:00-8:40</div>
               </th>
 
               {/* Period 2 */}
@@ -216,25 +209,25 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
               {/* Period 5 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">5</div>
-                <div className="asc-period-time">11:10-11:50</div>
+                <div className="asc-period-time">{isFriday ? '10:40-11:20' : '11:10-11:50'}</div>
               </th>
 
               {/* Period 6 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">6</div>
-                <div className="asc-period-time">11:50-12:30</div>
+                <div className="asc-period-time">{isFriday ? '11:20-12:00' : '11:50-12:30'}</div>
               </th>
 
               {/* Period 7 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">7</div>
-                <div className="asc-period-time">12:30-1:10</div>
+                <div className="asc-period-time">{isFriday ? '—' : '12:30-1:10'}</div>
               </th>
 
               {/* Period 8 */}
               <th className="asc-th-period">
                 <div className="asc-period-number">8</div>
-                <div className="asc-period-time">1:10-1:50</div>
+                <div className="asc-period-time">{isFriday ? '—' : '1:10-1:50'}</div>
               </th>
 
               {/* Sweeping Column */}
@@ -283,7 +276,7 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
                     </div>
                   );
                 }
-                // Paired electives (e.g. PHY w/ M. Shehu & GOV w/ M. Hassan or CHEM w/ M. Nana Firdaus & LIT w/ M. Hassan)
+                // Paired electives
                 const slotA = slotList[0];
                 const slotB = slotList[1];
                 return (
@@ -309,21 +302,21 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
                     {rowLabel}
                   </td>
 
-                  {/* Assembly Column (Monday and Friday) */}
-                  {isMonOrFri ? (
-                    <td className="asc-assembly-cell">
-                      Ass.
-                    </td>
-                  ) : (
-                    <td className="asc-assembly-empty"></td>
-                  )}
-
                   {/* Periods 1 to 4 */}
-                  {[1, 2, 3, 4].map(p => (
-                    <td key={p}>
-                      {renderCellContent(getSlot(p))}
-                    </td>
-                  ))}
+                  {[1, 2, 3, 4].map(p => {
+                    if (p === 1 && isMonOrFri) {
+                      return (
+                        <td key={p} className="asc-assembly-cell">
+                          <div className="asc-assembly-badge">ASSEMBLY</div>
+                        </td>
+                      );
+                    }
+                    return (
+                      <td key={p}>
+                        {renderCellContent(getSlot(p))}
+                      </td>
+                    );
+                  })}
 
                   {/* BREAK Cell (rendered once on first row with rowSpan in a vertical line) */}
                   {index === 0 && (
@@ -338,26 +331,12 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
                     </td>
                   )}
 
-                  {/* After Break */}
-                  {isFriday ? (
-                    <>
-                      {/* Friday has just 2 periods after break (5 & 6) */}
-                      {[5, 6].map(p => (
-                        <td key={p}>
-                          {renderCellContent(getSlot(p))}
-                        </td>
-                      ))}
-                      {/* Periods 7 & 8 are empty on Friday */}
-                      <td colSpan={2} className="asc-cell-empty"></td>
-                    </>
-                  ) : (
-                    /* Mon-Thu: Periods 5 to 8 */
-                    [5, 6, 7, 8].map(p => (
-                      <td key={p}>
-                        {renderCellContent(getSlot(p))}
-                      </td>
-                    ))
-                  )}
+                  {/* After Break: Periods 5 to 8 */}
+                  {[5, 6, 7, 8].map(p => (
+                    <td key={p}>
+                      {renderCellContent(getSlot(p))}
+                    </td>
+                  ))}
 
                   {/* Sweeping Column */}
                   <td className="asc-sweeping-cell">
@@ -369,9 +348,9 @@ export default function GeneralView({ classes = [], teachers = [], slots = [], s
           </tbody>
         </table>
 
-        {/* Clean Note Under Table */}
+        {/* Clean Note Under the Master Table */}
         <div className="asc-sheet-note">
-          * Note: Friday periods are 30 mins each (P1: 8:10–8:40, P2: 8:40–9:10, P3: 9:10–9:40, P4: 9:40–10:10, Break: 10:10–10:40, P5: 10:40–11:10, P6: 11:10–11:40, Sweep: 11:40–11:50). School closes after Period 6 for Juma'at Prayers & Dismissal.
+          * Note: Period 1 (8:00–8:40 AM) on Monday and Friday is dedicated to School Assembly across all classes. On Friday, school operates morning sessions before Juma'at prayers (Junior classes dismiss at Period 4 / 10:40 AM; Senior classes dismiss at Period 6 / 12:00 PM). Zero classes scheduled after break across all classes.
         </div>
       </div>
     </div>

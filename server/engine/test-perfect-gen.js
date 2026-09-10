@@ -394,7 +394,7 @@ export class TimetableGenerator {
     const cls = classMap[unit.class_id];
     const isJunior = cls && (cls.name?.startsWith('JS') || cls.level === 'JS');
     if (day === 'Friday') {
-      if (isJunior && (period > 4 || (p2 && p2 > 4))) return false;
+      if (isJunior && (period > 2 || (p2 && p2 > 2))) return false;
       if (period > 6 || (p2 && p2 > 6)) return false;
     }
 
@@ -413,6 +413,11 @@ export class TimetableGenerator {
       const tBusy1 = currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === period);
       const tBusy2 = p2 ? currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === p2) : false;
       if (tBusy1 || tBusy2) return false;
+
+      // Hard Cap: No teacher ever teaches > 6 periods on Mon-Thu, or > 4 on Friday!
+      const maxDaily = (day === 'Friday') ? 4 : 6;
+      const daySlots = currentSlots.filter(s => s.teacher_id === tId && s.day === day);
+      if (daySlots.length + unit.duration > maxDaily) return false;
 
       // Daily max: 6 on Mon-Thu, 4 on Friday
       const tDaySlots = currentSlots.filter(s => s.teacher_id === tId && s.day === day);
@@ -469,7 +474,7 @@ export class TimetableGenerator {
 
       const emptySlots = [];
       for (const d of this.days) {
-        const maxP = d === 'Friday' ? (isJunior ? 4 : 6) : 8;
+        const maxP = d === 'Friday' ? (isJunior ? 2 : 6) : 8;
         const startP = (d === 'Monday' || d === 'Friday') ? 2 : 1;
         for (let p = startP; p <= maxP; p++) {
           if (!currentSlots.some(s => s.class_id === unit.class_id && s.day === d && s.period_index === p)) {
@@ -806,7 +811,6 @@ export class TimetableGenerator {
 
           // 2. Check all involved teachers free
           let allTeachersFree = true;
-          let teacherConstraintViolated = false;
           for (const tId of unitTeachers) {
             const tSlot1 = teacherSchedule[tId][day][p];
             const tSlot2 = p2 ? teacherSchedule[tId][day][p2] : null;
@@ -850,7 +854,7 @@ export class TimetableGenerator {
 
           const cls = classes.find(c => c.id === unit.class_id);
           const isJuniorClass = cls && (cls.name?.startsWith('JS') || cls.level === 'JS');
-          if (isJuniorClass && day === 'Friday' && (p > 4 || (p2 && p2 > 4))) {
+          if (isJuniorClass && day === 'Friday' && (p > 2 || (p2 && p2 > 2))) {
             continue;
           }
 
@@ -1057,57 +1061,47 @@ export class TimetableGenerator {
               penalty += 1500 * (teacherDaily + unit.duration - maxDaily);
             }
 
-                        // =========================================================================
+            // =========================================================================
             // MANDATORY BREAK INTERLEAVING & BURNOUT PREVENTION
             // =========================================================================
             const tObj = teacherMap[tId];
             const isShehu = tObj?.time_preference === 'MORNING_ONLY' || tObj?.name?.includes('Shehu');
-            const isZainab = tObj?.name?.includes('Zainab');
-            const isSumayya = tObj?.name?.includes('Sumayya');
-            const isBurnoutTarget = isSumayya || isZainab;
+            const isBurnoutTarget = tObj?.name?.includes('Sumayya') || tObj?.name?.includes('Zainab');
+            let unavDaysArr = [];
+            try {
+              unavDaysArr = tObj?.unavailable_days ? (typeof tObj.unavailable_days === 'string' ? JSON.parse(tObj.unavailable_days) : tObj.unavailable_days) : [];
+            } catch { unavDaysArr = []; }
+            const isFourDayTeacher = Array.isArray(unavDaysArr) && unavDaysArr.includes('Friday');
 
-            // Daily hard caps:
-            // Friday: strictly max 4 for everyone (Juma'at)
-            if (day === 'Friday' && teacherDaily + unit.duration > 4) {
-              teacherConstraintViolated = true;
-              break;
+            // 1. Daily Workload Caps
+            if (isFourDayTeacher) {
+              // 4-day staff (M. Shehu, M. Zainab Kabir): strictly max 6 periods/day
+              if (teacherDaily + unit.duration > 6) continue;
+            } else {
+              // 5-day staff: Friday max 4 (Juma'at)
+              if (day === 'Friday' && teacherDaily + unit.duration > 4) continue;
+              // For M. Sumayya: HARD CAP of 5 periods/day on Mon-Thu!
+              if (tObj?.name?.includes('Sumayya')) {
+                if (day !== 'Friday' && teacherDaily + unit.duration > 5) continue;
+              } else {
+                if (teacherDaily + unit.duration > 6) continue;
+                if (teacherDaily + unit.duration > 5) {
+                  penalty += 3500 * (teacherDaily + unit.duration - 5);
+                }
+              }
             }
 
-            // Mon-Thu hard caps:
-            // M. Zainab Kabir: strictly max 6 (24 contacts / 4 days = exactly 6/day)
-            if (isZainab && teacherDaily + unit.duration > 6) {
-              teacherConstraintViolated = true;
-              break;
-            }
-
-            // M. Sumayya: strictly max 5 on Mon-Thu (24 contacts / 5 days = 5,5,5,5,4)
-            if (isSumayya && day !== 'Friday' && teacherDaily + unit.duration > 5) {
-              teacherConstraintViolated = true;
-              break;
-            }
-
-            // All other teachers: strictly max 6 on Mon-Thu (NO 7 or 8 period days!)
-            if (teacherDaily + unit.duration > 6) {
-              teacherConstraintViolated = true;
-              break;
-            }
-
-            // Session Breathers:
+            // 2. Session Breathers & Consecutive Blocks
             const dayBefore = teacherDayBeforeBreakCount[tId]?.[day] || 0;
             const dayAfter = teacherDayAfterBreakCount[tId]?.[day] || 0;
 
             if (isBurnoutTarget) {
-              // M. Sumayya & M. Zainab Kabir: GUARANTEED free period in morning & afternoon!
-              if (p <= 4 && dayBefore + unit.duration > 3) {
-                teacherConstraintViolated = true;
-                break;
-              }
-              if (p > 4 && dayAfter + unit.duration > 3) {
-                teacherConstraintViolated = true;
-                break;
-              }
+              // HARD CONSTRAINTS FOR M. SUMAYYA AND M. ZAINAB KABIR:
+              // Strictly guaranteed at least one 40-min free period in morning and afternoon!
+              if (p <= 4 && dayBefore + unit.duration > 3) continue;
+              if (p > 4 && dayAfter + unit.duration > 3) continue;
 
-              // Strictly max 3 consecutive periods (prefer 1-2)
+              // Strictly max 3 consecutive periods (prefer <= 2)
               let consecBefore = 0;
               const startCheck = (p <= 4) ? 1 : 5;
               for (let cp = p - 1; cp >= startCheck; cp--) {
@@ -1121,15 +1115,13 @@ export class TimetableGenerator {
                 else break;
               }
               const sessionConsec = consecBefore + unit.duration + consecAfter;
-              if (sessionConsec > 3) {
-                teacherConstraintViolated = true;
-                break;
-              }
-              if (sessionConsec === 3) penalty += 2500;
+              if (sessionConsec > 3) continue; // NEVER more than 3 consecutive periods!
+              if (sessionConsec === 3) penalty += 2000; // Strongly prefer 1-2 periods then breather
             } else if (!isShehu) {
-              // Soft heuristics for other teachers
-              if (p <= 4 && dayBefore + unit.duration > 3) penalty += 2000;
-              if (p > 4 && dayAfter + unit.duration > 3) penalty += 2000;
+              // SOFT HEURISTICS FOR ALL OTHER TEACHERS:
+              // Strongly encourage breathers without blocking solver feasibility
+              if (p <= 4 && dayBefore + unit.duration > 3) penalty += 2500;
+              if (p > 4 && dayAfter + unit.duration > 3) penalty += 2500;
 
               let consecBefore = 0;
               const startCheck = (p <= 4) ? 1 : 5;
@@ -1144,11 +1136,10 @@ export class TimetableGenerator {
                 else break;
               }
               const sessionConsec = consecBefore + unit.duration + consecAfter;
-              if (sessionConsec >= 4) penalty += 3500;
-              else if (sessionConsec === 3) penalty += 600;
+              if (sessionConsec >= 4) penalty += 4000;
+              else if (sessionConsec === 3) penalty += 800;
             }
           }
-          if (teacherConstraintViolated) continue;
 
           // Avoid clustering same subject on same day in class:
           // A class can NEVER have more than 1 session of the same subject in a single day
@@ -1176,7 +1167,7 @@ export class TimetableGenerator {
             }
           } else {
             // Friday: Junior targets exactly 1 period (P2), Senior targets exactly 5 periods (P2-P6)
-            const maxFri = isJunior ? 4 : 5;
+            const maxFri = isJunior ? 1 : 5;
             if (classDaily + unit.duration > maxFri) {
               continue; // Strictly disallow exceeding allowed Friday periods
             } else if (classDaily < maxFri) {

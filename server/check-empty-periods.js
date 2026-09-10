@@ -25,7 +25,7 @@ for (const cls of classes) {
   let totalGaps = 0;
 
   for (const day of days) {
-    const maxP = (day === 'Friday') ? 6 : 8;
+    const maxP = (day === 'Friday') ? 4 : 8;
     const daySlots = slots.filter(s => s.class_id === cls.id && s.day === day);
     const occupiedPeriods = new Set(daySlots.map(s => s.period_index));
     
