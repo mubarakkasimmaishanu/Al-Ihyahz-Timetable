@@ -22,17 +22,6 @@ function isHeavySubject(code, name) {
          n.includes('BIOL') || n.includes('GOVERN') || n.includes('LITERAT') || n.includes('ECON');
 }
 
-// Light junior subjects explicitly designated for Period 8 (closing period)
-// HAUSA, CMP, NV, BUS, STP, PVS, IRS
-const JUNIOR_LIGHT_SUBJECT_CODES = new Set(['HAUSA', 'CMP', 'COMP', 'NV', 'BUS', 'STP', 'PVS', 'IRS']);
-
-function isJuniorLightSubject(code) {
-  const c = (code || '').toUpperCase();
-  return JUNIOR_LIGHT_SUBJECT_CODES.has(c);
-}
-
-const SENIOR_BANNED_P8_CODES = new Set(['PHY', 'CHM', 'CHEM', 'MTH', 'MATHS', 'ENG', 'GOV', 'GOVT', 'ECO', 'ECON']);
-
 export class TimetableGenerator {
   constructor(options = {}) {
     this.days = options.days || ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -218,7 +207,7 @@ export class TimetableGenerator {
                 gaps += (expectedCount - cSlots.length) * 2;
               }
             } else {
-              // Mon-Thu: All classes (Junior and Senior) require all 8 periods filled (P2-P8 on Mon, P1-P8 on Tue-Thu)
+              // Mon-Thu: All periods must be filled
               const maxP = 8;
               for (let p = startP; p <= maxP; p++) {
                 if (!pIndices.has(p)) gaps += 3;
@@ -342,21 +331,26 @@ export class TimetableGenerator {
                 );
                 if (pEmpty <= 4) {
                   const morningCount = tDaySlots.filter(o => o.period_index <= 4).length;
-                  if (morningCount >= 4) { canMove = false; break; }
+                  if (morningCount >= 3) { canMove = false; break; }
                 } else {
                   const afternoonCount = tDaySlots.filter(o => o.period_index > 4).length;
-                  if (afternoonCount >= 4) { canMove = false; break; }
+                  if (afternoonCount >= 3) { canMove = false; break; }
                 }
 
-                // Also prevent creating > 4 consecutive teaching periods across the day
-                const tDayPeriods = new Set(tDaySlots.map(o => o.period_index));
-                tDayPeriods.add(pEmpty);
+                // Also prevent creating 4+ consecutive teaching periods in a session
+                const sessionStart = (pEmpty <= 4) ? 1 : 5;
+                const sessionEnd = (pEmpty <= 4) ? 4 : 8;
+                const tSessionPeriods = new Set(
+                  tDaySlots.filter(o => o.period_index >= sessionStart && o.period_index <= sessionEnd)
+                    .map(o => o.period_index)
+                );
+                tSessionPeriods.add(pEmpty); // simulate adding the moved slot
                 let maxRun = 0, run = 0;
-                for (let pp = 1; pp <= 8; pp++) {
-                  if (tDayPeriods.has(pp)) { run++; if (run > maxRun) maxRun = run; }
+                for (let pp = sessionStart; pp <= sessionEnd; pp++) {
+                  if (tSessionPeriods.has(pp)) { run++; if (run > maxRun) maxRun = run; }
                   else run = 0;
                 }
-                if (maxRun > 4) { canMove = false; break; }
+                if (maxRun >= 4) { canMove = false; break; }
               }
 
               const sub = subjectMap[s.subject_id];
@@ -411,31 +405,10 @@ export class TimetableGenerator {
 
     // Teachers
     const tIds = unit.isPaired ? [unit.allocA.teacher_id, unit.allocB.teacher_id] : [unit.alloc.teacher_id];
-     const unitEnd = period + unit.duration - 1;
-
-    // 1. SAME CLASS CONSECUTIVE CHECK:
-    // A class can NEVER have two double periods in a row by the same teacher (e.g. IRS double + NV double)!
-    // A teacher can NEVER teach more than 2 consecutive periods in the same class!
-    if (unit.duration === 2) {
-      const hasAdjacentInClass = currentSlots.some(s => 
-        s.class_id === unit.class_id && 
-        tIds.includes(s.teacher_id) && 
-        s.day === day && 
-        (s.period_index === period - 1 || s.period_index === unitEnd + 1)
-      );
-      if (hasAdjacentInClass) return false;
-    } else {
-      const prev1 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period - 1);
-      const prev2 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period - 2);
-      const next1 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period + 1);
-      const next2 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period + 2);
-      if ((prev1 && prev2) || (next1 && next2) || (prev1 && next1)) return false;
-    }
-
     for (const tId of tIds) {
       const t = teacherMap[tId];
       if (t?.unavailable_days && t.unavailable_days.includes(day)) return false;
-      if (t?.time_preference === 'MORNING_ONLY' && (period > 6 || unitEnd > 6)) return false;
+      if (t?.time_preference === 'MORNING_ONLY' && (period > 6 || (p2 && p2 > 6))) return false;
 
       const tBusy1 = currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === period);
       const tBusy2 = p2 ? currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === p2) : false;
@@ -446,27 +419,19 @@ export class TimetableGenerator {
       const maxDailyHard = (day === 'Friday') ? 4 : 6;
       if (tDaySlots.length + unit.duration > maxDailyHard) return false;
 
+      // Session breather HARD constraint for M. Sumayya and M. Zainab Kabir only
+      // (the two teachers with burnout complaints — guaranteed max 3 in any session)
       const isShehuCP = t?.time_preference === 'MORNING_ONLY' || t?.name?.includes('Shehu');
-
-      // Daily session limits: max 4 in morning and max 4 in afternoon
-      if (!isShehuCP && period <= 4) {
-        const mCount = tDaySlots.filter(s => s.period_index <= 4).length;
-        if (mCount + unit.duration > 4) return false;
-      }
-      if (period > 4) {
-        const aCount = tDaySlots.filter(s => s.period_index > 4).length;
-        if (aCount + unit.duration > 4) return false;
-      }
-      // Period 8 limits for teachers:
-      if (period === 8 || unitEnd === 8) {
-        const tP8Count = currentSlots.filter(s => s.teacher_id === tId && s.period_index === 8).length;
-        if (t?.name?.includes('Shehu')) return false;
-        if (t?.name?.includes('Hassan')) return false;
-        if (t?.name?.includes('Nana')) return false;
-        if (t?.name?.includes('Sumayya') && tP8Count >= 2) return false;
-        if (t?.name?.includes('Zainab') && tP8Count >= 3) return false;
-        if (tP8Count >= 3 && !t?.name?.includes('Nabila')) return false;
-        if (tP8Count >= 4) return false;
+      const isBurnoutTarget = t?.name?.includes('Sumayya') || t?.name?.includes('Zainab');
+      if (!isShehuCP && isBurnoutTarget) {
+        if (period <= 4) {
+          const mCount = tDaySlots.filter(s => s.period_index <= 4).length;
+          if (mCount + unit.duration > 3) return false;
+        }
+        if ((p2 || period) > 4) {
+          const aCount = tDaySlots.filter(s => s.period_index > 4).length;
+          if (aCount + unit.duration > 3) return false;
+        }
       }
     }
 
@@ -475,22 +440,10 @@ export class TimetableGenerator {
     for (const sId of sIds) {
       const sub = subjectMap[sId];
       const code = (sub?.code || '').toUpperCase();
-      if (code === 'CHM' && (period === 8 || unitEnd === 8)) return false;
-      if (code === 'MTH' && (period >= 7 || unitEnd >= 7 || (day === 'Friday' && period >= 5))) return false;
-      if (code === 'ENG' && (period >= 8 || unitEnd >= 8 || (day === 'Friday' && period >= 5))) return false;
+      if (code === 'CHM' && (period === 8 || p2 === 8)) return false;
+      if (code === 'MTH' && (period >= 7 || (p2 && p2 >= 7) || (day === 'Friday' && period >= 5))) return false;
+      if (code === 'ENG' && (period >= 8 || (p2 && p2 >= 8) || (day === 'Friday' && period >= 5))) return false;
       
-      // PERIOD 8 SUBJECT ELIGIBILITY:
-      if (period === 8 || unitEnd === 8) {
-        if (isJunior) {
-          // Junior classes: closing period MUST be a lighter subject (Hausa, Computer, National Values, Business Studies)
-          if (!isJuniorLightSubject(code)) return false;
-        } else {
-          // Senior classes: paired electives and heavy theory & science subjects strictly prohibited
-          if (unit.isPaired) return false;
-          if (SENIOR_BANNED_P8_CODES.has(code)) return false;
-        }
-      }
-
       // Class must never have the same subject twice on the same day
       if (currentSlots.some(s => s.class_id === unit.class_id && s.subject_id === sId && s.day === day)) {
         return false;
@@ -505,30 +458,8 @@ export class TimetableGenerator {
     const teacherMap = Object.fromEntries(teachers.map(t => [t.id, t]));
     const subjectMap = Object.fromEntries(subjects.map(s => [s.id, s]));
 
-    let currentSlots = [...slots];
+    const currentSlots = [...slots];
     const unplaced = [...unplacedUnits];
-
-    const getSlotGroup = (slts, class_id, day, period) => {
-      return slts.filter(s => s.class_id === class_id && s.day === day && s.period_index === period);
-    };
-
-    const convertGroupToUnit = (group, class_id) => {
-      if (group.length === 2) {
-        return {
-          class_id,
-          duration: 1,
-          isPaired: true,
-          allocA: { subject_id: group[0].subject_id, teacher_id: group[0].teacher_id, class_id },
-          allocB: { subject_id: group[1].subject_id, teacher_id: group[1].teacher_id, class_id }
-        };
-      }
-      return {
-        class_id,
-        duration: 1,
-        isPaired: false,
-        alloc: { subject_id: group[0].subject_id, teacher_id: group[0].teacher_id, class_id }
-      };
-    };
 
     for (let uIdx = unplaced.length - 1; uIdx >= 0; uIdx--) {
       const unit = unplaced[uIdx];
@@ -536,7 +467,6 @@ export class TimetableGenerator {
       const isJunior = cls && (cls.name?.startsWith('JS') || cls.level === 'JS');
       let unitPlaced = false;
 
-      // Find all empty slots for this class
       const emptySlots = [];
       for (const d of this.days) {
         const maxP = d === 'Friday' ? (isJunior ? 4 : 6) : 8;
@@ -548,22 +478,18 @@ export class TimetableGenerator {
         }
       }
 
-      // Step 1: Direct placement
+      // 1. Direct placement
       for (const e of emptySlots) {
         if (this._canPlaceSlot(unit, e.day, e.period, currentSlots, classMap, teacherMap, subjectMap)) {
-          for (let offset = 0; offset < unit.duration; offset++) {
-            const pIdx = e.period + offset;
-            if (unit.isPaired) {
-              currentSlots.push(
-                { class_id: unit.class_id, subject_id: unit.allocA.subject_id, teacher_id: unit.allocA.teacher_id, day: e.day, period_index: pIdx, is_locked: 0 },
-                { class_id: unit.class_id, subject_id: unit.allocB.subject_id, teacher_id: unit.allocB.teacher_id, day: e.day, period_index: pIdx, is_locked: 0 }
-              );
-            } else {
-              currentSlots.push(
-                { class_id: unit.class_id, subject_id: unit.alloc.subject_id, teacher_id: unit.alloc.teacher_id, day: e.day, period_index: pIdx, is_locked: 0 }
-              );
-            }
-          }
+          const alloc = unit.alloc || unit.allocA;
+          currentSlots.push({
+            class_id: unit.class_id,
+            subject_id: alloc.subject_id,
+            teacher_id: alloc.teacher_id,
+            day: e.day,
+            period_index: e.period,
+            is_locked: 0
+          });
           unitPlaced = true;
           unplaced.splice(uIdx, 1);
           break;
@@ -571,109 +497,48 @@ export class TimetableGenerator {
       }
       if (unitPlaced) continue;
 
-      // Step 2: 1-step swap
-      const occupiedPeriods = [];
-      for (const d of this.days) {
-        const maxP = d === 'Friday' ? (isJunior ? 4 : 6) : 8;
-        const startP = (d === 'Monday' || d === 'Friday') ? 2 : 1;
-        for (let p = startP; p <= maxP; p++) {
-          const grp = getSlotGroup(currentSlots, unit.class_id, d, p);
-          if (grp.length > 0) {
-            occupiedPeriods.push({ day: d, period: p, group: grp });
-          }
-        }
-      }
+      // 2. 1-step swap
+      for (const e of emptySlots) {
+        const classSlots = currentSlots.filter(s => s.class_id === unit.class_id);
+        for (const existing of classSlots) {
+          const existingUnit = {
+            class_id: existing.class_id,
+            duration: 1,
+            isPaired: false,
+            alloc: {
+              subject_id: existing.subject_id,
+              teacher_id: existing.teacher_id,
+              class_id: existing.class_id
+            }
+          };
 
-      for (const occ of occupiedPeriods) {
-        const occUnit = convertGroupToUnit(occ.group, unit.class_id);
-        const withoutOcc = currentSlots.filter(s => !occ.group.includes(s));
+          const withoutExisting = currentSlots.filter(s => s !== existing);
+          if (this._canPlaceSlot(existingUnit, e.day, e.period, withoutExisting, classMap, teacherMap, subjectMap)) {
+            const withExistingAtE = [...withoutExisting, {
+              ...existing,
+              day: e.day,
+              period_index: e.period
+            }];
 
-        for (const e of emptySlots) {
-          if (e.day === occ.day && e.period === occ.period) continue;
-
-          if (this._canPlaceSlot(occUnit, e.day, e.period, withoutOcc, classMap, teacherMap, subjectMap)) {
-            const movedGroup = occ.group.map(s => ({ ...s, day: e.day, period_index: e.period }));
-            const withOccAtE = [...withoutOcc, ...movedGroup];
-
-            if (this._canPlaceSlot(unit, occ.day, occ.period, withOccAtE, classMap, teacherMap, subjectMap)) {
-              for (const s of occ.group) {
-                s.day = e.day;
-                s.period_index = e.period;
-              }
-              for (let offset = 0; offset < unit.duration; offset++) {
-                const pIdx = occ.period + offset;
-                if (unit.isPaired) {
-                  currentSlots.push(
-                    { class_id: unit.class_id, subject_id: unit.allocA.subject_id, teacher_id: unit.allocA.teacher_id, day: occ.day, period_index: pIdx, is_locked: 0 },
-                    { class_id: unit.class_id, subject_id: unit.allocB.subject_id, teacher_id: unit.allocB.teacher_id, day: occ.day, period_index: pIdx, is_locked: 0 }
-                  );
-                } else {
-                  currentSlots.push(
-                    { class_id: unit.class_id, subject_id: unit.alloc.subject_id, teacher_id: unit.alloc.teacher_id, day: occ.day, period_index: pIdx, is_locked: 0 }
-                  );
-                }
-              }
+            if (this._canPlaceSlot(unit, existing.day, existing.period_index, withExistingAtE, classMap, teacherMap, subjectMap)) {
+              const oldDay = existing.day;
+              const oldPeriod = existing.period_index;
+              existing.day = e.day;
+              existing.period_index = e.period;
+              const alloc = unit.alloc || unit.allocA;
+              currentSlots.push({
+                class_id: unit.class_id,
+                subject_id: alloc.subject_id,
+                teacher_id: alloc.teacher_id,
+                day: oldDay,
+                period_index: oldPeriod,
+                is_locked: 0
+              });
               unitPlaced = true;
               unplaced.splice(uIdx, 1);
               break;
             }
           }
-        }
-        if (unitPlaced) break;
-      }
-      if (unitPlaced) continue;
-
-      // Step 3: 2-step chain (A -> B -> empty)
-      for (const occ1 of occupiedPeriods) {
-        const occUnit1 = convertGroupToUnit(occ1.group, unit.class_id);
-        const withoutOcc1 = currentSlots.filter(s => !occ1.group.includes(s));
-
-        for (const occ2 of occupiedPeriods) {
-          if (occ2.day === occ1.day && occ2.period === occ1.period) continue;
-          const occUnit2 = convertGroupToUnit(occ2.group, unit.class_id);
-          const withoutOcc1And2 = withoutOcc1.filter(s => !occ2.group.includes(s));
-
-          for (const e of emptySlots) {
-            if (e.day === occ2.day && e.period === occ2.period) continue;
-
-            if (this._canPlaceSlot(occUnit2, e.day, e.period, withoutOcc1And2, classMap, teacherMap, subjectMap)) {
-              const movedGroup2 = occ2.group.map(s => ({ ...s, day: e.day, period_index: e.period }));
-              const with2AtE = [...withoutOcc1And2, ...movedGroup2];
-
-              if (this._canPlaceSlot(occUnit1, occ2.day, occ2.period, with2AtE, classMap, teacherMap, subjectMap)) {
-                const movedGroup1 = occ1.group.map(s => ({ ...s, day: occ2.day, period_index: occ2.period }));
-                const with1At2 = [...with2AtE, ...movedGroup1];
-
-                if (this._canPlaceSlot(unit, occ1.day, occ1.period, with1At2, classMap, teacherMap, subjectMap)) {
-                  for (const s of occ2.group) {
-                    s.day = e.day;
-                    s.period_index = e.period;
-                  }
-                  for (const s of occ1.group) {
-                    s.day = occ2.day;
-                    s.period_index = occ2.period;
-                  }
-                  for (let offset = 0; offset < unit.duration; offset++) {
-                    const pIdx = occ1.period + offset;
-                    if (unit.isPaired) {
-                      currentSlots.push(
-                        { class_id: unit.class_id, subject_id: unit.allocA.subject_id, teacher_id: unit.allocA.teacher_id, day: occ1.day, period_index: pIdx, is_locked: 0 },
-                        { class_id: unit.class_id, subject_id: unit.allocB.subject_id, teacher_id: unit.allocB.teacher_id, day: occ1.day, period_index: pIdx, is_locked: 0 }
-                      );
-                    } else {
-                      currentSlots.push(
-                        { class_id: unit.class_id, subject_id: unit.alloc.subject_id, teacher_id: unit.alloc.teacher_id, day: occ1.day, period_index: pIdx, is_locked: 0 }
-                      );
-                    }
-                  }
-                  unitPlaced = true;
-                  unplaced.splice(uIdx, 1);
-                  break;
-                }
-              }
-            }
-          }
-          if (unitPlaced) break;
         }
         if (unitPlaced) break;
       }
@@ -704,15 +569,11 @@ export class TimetableGenerator {
     const classBeforeBreakCount = {};
     const classAfterBreakCount = {};
 
-    const classPeriod8SubjectCount = {};
-    const classPeriod8TotalCount = {};
     for (const c of classes) {
       classSchedule[c.id] = {};
       classDaySubjectCount[c.id] = {};
       classDayPeriodCount[c.id] = {};
       classDayHeavyCount[c.id] = {};
-      classPeriod8SubjectCount[c.id] = {};
-      classPeriod8TotalCount[c.id] = 0;
       classBeforeBreakCount[c.id] = 0;
       classAfterBreakCount[c.id] = 0;
       for (const d of this.days) {
@@ -726,8 +587,6 @@ export class TimetableGenerator {
     const teacherDaySubjectCount = {};
     const teacherDayBeforeBreakCount = {};
     const teacherDayAfterBreakCount = {};
-    const teacherJuniorP8Count = {};
-    const teacherSeniorP8Count = {};
     for (const t of teachers) {
       teacherSchedule[t.id] = {};
       teacherDayPeriodCount[t.id] = {};
@@ -735,8 +594,6 @@ export class TimetableGenerator {
       teacherPeriodCount[t.id] = {};
       teacherBeforeBreakCount[t.id] = 0;
       teacherAfterBreakCount[t.id] = 0;
-      teacherJuniorP8Count[t.id] = 0;
-      teacherSeniorP8Count[t.id] = 0;
       teacherDayBeforeBreakCount[t.id] = {};
       teacherDayAfterBreakCount[t.id] = {};
       for (let p = 1; p <= this.regularPeriods; p++) {
@@ -772,15 +629,6 @@ export class TimetableGenerator {
       const sub = subjectMap[lock.subject_id];
       if (isHeavySubject(sub?.code, sub?.name)) {
         classDayHeavyCount[lock.class_id][lock.day] = (classDayHeavyCount[lock.class_id][lock.day] || 0) + 1;
-      }
-
-      if (lock.period_index === 8) {
-        classPeriod8SubjectCount[lock.class_id][lock.subject_id] = 
-          (classPeriod8SubjectCount[lock.class_id][lock.subject_id] || 0) + 1;
-        const clsObj = classMap[lock.class_id];
-        const isJun = clsObj && (clsObj.name?.startsWith('JS') || clsObj.level === 'JS');
-        if (isJun) teacherJuniorP8Count[lock.teacher_id] = (teacherJuniorP8Count[lock.teacher_id] || 0) + 1;
-        else teacherSeniorP8Count[lock.teacher_id] = (teacherSeniorP8Count[lock.teacher_id] || 0) + 1;
       }
 
       if (lock.period_index <= 4) {
@@ -901,7 +749,7 @@ export class TimetableGenerator {
           p += (teacherWeeklyLoads[tId] || 0) * 40;
         }
         if (unit.isPaired) p += 2500;
-        if (unit.duration === 2) p += 6000;
+        if (unit.duration === 2) p += 1500;
         const subIds = unit.isPaired ? [unit.allocA.subject_id, unit.allocB.subject_id] : [unit.alloc.subject_id];
         for (const sId of subIds) {
           const code = (subjectMap[sId]?.code || '').toUpperCase();
@@ -912,12 +760,8 @@ export class TimetableGenerator {
         return p;
       };
 
-      let pA = getPriority(a);
-      let pB = getPriority(b);
-      if (stochastic) {
-        pA += (Math.random() * 1200 - 600);
-        pB += (Math.random() * 1200 - 600);
-      }
+      const pA = getPriority(a) + (stochastic ? (Math.random() * 400 - 200) : 0);
+      const pB = getPriority(b) + (stochastic ? (Math.random() * 400 - 200) : 0);
       return pB - pA;
     });
 
@@ -955,7 +799,6 @@ export class TimetableGenerator {
         for (let p = 1; p <= maxP; p++) {
           if (unit.duration === 2 && p >= maxP) continue;
           const p2 = unit.duration === 2 ? p + 1 : null;
-          const unitEnd = p + unit.duration - 1;
 
           // 1. Check class free
           const cSlot1 = classSchedule[unit.class_id][day][p];
@@ -1048,7 +891,7 @@ export class TimetableGenerator {
               penalty -= 300; // High reward for prime post-break periods P5 & P6
             }
             if (day === 'Friday') {
-              penalty += 300; // Allow 1 single period on Friday if needed to relieve Mon-Thu
+              penalty += 1200; // Strongly avoid placing paired electives on Friday
             }
           }
 
@@ -1059,7 +902,7 @@ export class TimetableGenerator {
               penalty += 3000; // Avoid last period
             }
             if (day === 'Friday') {
-              penalty += 300; // Allow 1 single period on Friday if needed to relieve Mon-Thu
+              penalty += 1200; // Strongly avoid placing paired electives on Friday
             }
           }
 
@@ -1180,7 +1023,7 @@ export class TimetableGenerator {
 
           for (const tId of unitTeachers) {
             const teacher = teacherMap[tId];
-            if (teacher && (teacher.time_preference === 'MORNING_ONLY' || teacher.name?.includes('Shehu') || teacher.name?.includes('Yusuf'))) {
+            if (teacher && (teacher.time_preference === 'MORNING_ONLY' || teacher.name?.includes('Shehu'))) {
               if (p === 6 || p2 === 6) {
                 penalty += 120; // allow period 6 when needed (to fit 22 periods into 4 days), but prefer 1-5
               } else if (p === 5 || p2 === 5) {
@@ -1191,20 +1034,14 @@ export class TimetableGenerator {
               const tBefore = teacherBeforeBreakCount[tId] || 0;
               const tAfter = teacherAfterBreakCount[tId] || 0;
               const isMorning = p <= 4;
-              const totalLoad = teacherWeeklyLoads[tId] || 24;
-              const targetSession = Math.round(totalLoad / 2);
 
               if (isMorning) {
-                if (tBefore >= targetSession) {
-                  penalty += (tBefore - targetSession + unit.duration) * 1500;
-                } else if (tBefore >= tAfter) {
-                  penalty += (tBefore - tAfter + unit.duration) * 250;
+                if (tBefore >= tAfter) {
+                  penalty += (tBefore - tAfter + unit.duration) * 50;
                 }
               } else {
-                if (tAfter >= targetSession) {
-                  penalty += (tAfter - targetSession + unit.duration) * 1500;
-                } else if (tAfter >= tBefore) {
-                  penalty += (tAfter - tBefore + unit.duration) * 250;
+                if (tAfter >= tBefore) {
+                  penalty += (tAfter - tBefore + unit.duration) * 50;
                 }
               }
 
@@ -1221,13 +1058,11 @@ export class TimetableGenerator {
               penalty += 1500 * (teacherDaily + unit.duration - maxDaily);
             }
 
-            // =========================================================================
+                        // =========================================================================
             // MANDATORY BREAK INTERLEAVING & BURNOUT PREVENTION
             // =========================================================================
             const tObj = teacherMap[tId];
             const isShehu = tObj?.time_preference === 'MORNING_ONLY' || tObj?.name?.includes('Shehu');
-            const isYusuf = tObj?.name?.includes('Yusuf');
-            const isMorningSpecialist = isShehu || isYusuf;
             const isZainab = tObj?.name?.includes('Zainab');
             const isSumayya = tObj?.name?.includes('Sumayya');
             const isBurnoutTarget = isSumayya || isZainab;
@@ -1246,15 +1081,10 @@ export class TimetableGenerator {
               break;
             }
 
-            // M. Sumayya: prefer max 5 on Mon-Thu, allow max 6 if Friday load is light
-            if (isSumayya && day !== 'Friday') {
-              if (teacherDaily + unit.duration > 6) {
-                teacherConstraintViolated = true;
-                break;
-              }
-              if (teacherDaily + unit.duration === 6) {
-                penalty += 4500;
-              }
+            // M. Sumayya: strictly max 5 on Mon-Thu (24 contacts / 5 days = 5,5,5,5,4)
+            if (isSumayya && day !== 'Friday' && teacherDaily + unit.duration > 5) {
+              teacherConstraintViolated = true;
+              break;
             }
 
             // All other teachers: strictly max 6 on Mon-Thu (NO 7 or 8 period days!)
@@ -1263,37 +1093,22 @@ export class TimetableGenerator {
               break;
             }
 
-            // For all 5-day teachers (Maryam, Nabila, Sumayya, Abba, Amina, Nana Firdaus, Mubarak):
-            // Penalize 6th period on Mon-Thu so they maintain smooth 5, 5, 5, 5, 4 spreads!
-            if (!isZainab && !isShehu && day !== 'Friday' && teacherDaily + unit.duration > 5) {
-              penalty += 3500;
-            }
-
-            // Session Breathers (UNIVERSAL FOR ALL TEACHERS):
             // Session Breathers:
             const dayBefore = teacherDayBeforeBreakCount[tId]?.[day] || 0;
             const dayAfter = teacherDayAfterBreakCount[tId]?.[day] || 0;
 
-            if (!isMorningSpecialist) {
-              // Physical limits in session: max 4 periods
-              if (p <= 4 && dayBefore + unit.duration > 4) {
+            if (isBurnoutTarget) {
+              // M. Sumayya & M. Zainab Kabir: GUARANTEED free period in morning & afternoon!
+              if (p <= 4 && dayBefore + unit.duration > 3) {
                 teacherConstraintViolated = true;
                 break;
               }
-              if (p > 4 && dayAfter + unit.duration > 4) {
+              if (p > 4 && dayAfter + unit.duration > 3) {
                 teacherConstraintViolated = true;
                 break;
               }
 
-              // Prefer giving a breather (<= 3 in session) by penalizing 4 periods
-              if (p <= 4 && dayBefore + unit.duration === 4) {
-                penalty += 800;
-              }
-              if (p > 4 && dayAfter + unit.duration === 4) {
-                penalty += 800;
-              }
-
-              // Check consecutive periods in session
+              // Strictly max 3 consecutive periods (prefer 1-2)
               let consecBefore = 0;
               const startCheck = (p <= 4) ? 1 : 5;
               for (let cp = p - 1; cp >= startCheck; cp--) {
@@ -1302,130 +1117,39 @@ export class TimetableGenerator {
               }
               let consecAfter = 0;
               const endCheck = (p <= 4) ? 4 : maxP;
-              for (let cp = unitEnd + 1; cp <= endCheck; cp++) {
+              for (let cp = (p2 || p) + 1; cp <= endCheck; cp++) {
                 if (teacherSchedule[tId][day][cp]) consecAfter++;
                 else break;
               }
               const sessionConsec = consecBefore + unit.duration + consecAfter;
-              if (sessionConsec === 4) penalty += 1200;
-              else if (sessionConsec === 3) penalty += 300;
-
-              // Strictly max 4 consecutive periods across the entire day!
-              let dayConsecBefore = 0;
-              for (let cp = p - 1; cp >= 1; cp--) {
-                if (teacherSchedule[tId][day][cp]) dayConsecBefore++;
-                else break;
-              }
-              let dayConsecAfter = 0;
-              for (let cp = unitEnd + 1; cp <= maxP; cp++) {
-                if (teacherSchedule[tId][day][cp]) dayConsecAfter++;
-                else break;
-              }
-              const dayConsec = dayConsecBefore + unit.duration + dayConsecAfter;
-              if (dayConsec > 4) penalty += 2500;
-              else if (dayConsec === 4) penalty += 1200;
-            }
-
-            // PERIOD 8 FAIR ROTATION & EQUAL TEACHER DISTRIBUTION:
-            if (p === 8 || unitEnd === 8) {
-              const currentP8 = teacherPeriodCount[tId]?.[8] || 0;
-              const targetClass = classMap[unit.class_id];
-              const isJuniorClassP8 = targetClass && (targetClass.level === 'JS' || (targetClass.name && targetClass.name.startsWith('JS')));
-              
-              if (isJuniorClassP8) {
-                const curJun = teacherJuniorP8Count[tId] || 0;
-                // In Junior: Sumayya strictly max 2; others max 3
-                const maxJun = (isSumayya) ? 2 : 3;
-                if (curJun >= maxJun) {
-                  teacherConstraintViolated = true;
-                  break;
-                }
-              } else {
-                const curSen = teacherSeniorP8Count[tId] || 0;
-                // In Senior: each teacher max 3 Senior P8 slots!
-                if (curSen >= 3) {
-                  teacherConstraintViolated = true;
-                  break;
-                }
-              }
-
-              // M. Sumayya: strictly max 2 across entire week!
-              if (isSumayya && currentP8 >= 2) {
+              if (sessionConsec > 3) {
                 teacherConstraintViolated = true;
                 break;
               }
-              // M. Nabila teaches both Junior & Senior, max 4 total; others max 3
-              const isNabila = tObj?.name?.includes('Nabila');
-              const maxP8Total = isNabila ? 4 : 3;
-              if (currentP8 >= maxP8Total) {
-                teacherConstraintViolated = true;
-                break;
+              if (sessionConsec === 3) penalty += 2500;
+            } else if (!isShehu) {
+              // Soft heuristics for other teachers
+              if (p <= 4 && dayBefore + unit.duration > 3) penalty += 2000;
+              if (p > 4 && dayAfter + unit.duration > 3) penalty += 2000;
+
+              let consecBefore = 0;
+              const startCheck = (p <= 4) ? 1 : 5;
+              for (let cp = p - 1; cp >= startCheck; cp--) {
+                if (teacherSchedule[tId][day][cp]) consecBefore++;
+                else break;
               }
-              // Rotation penalty so Period 8 is shared equally across teachers
-              penalty += currentP8 * 300;
+              let consecAfter = 0;
+              const endCheck = (p <= 4) ? 4 : maxP;
+              for (let cp = (p2 || p) + 1; cp <= endCheck; cp++) {
+                if (teacherSchedule[tId][day][cp]) consecAfter++;
+                else break;
+              }
+              const sessionConsec = consecBefore + unit.duration + consecAfter;
+              if (sessionConsec >= 4) penalty += 3500;
+              else if (sessionConsec === 3) penalty += 600;
             }
           }
           if (teacherConstraintViolated) continue;
-
-          // SAME CLASS CONSECUTIVE PROTECTION:
-          // A teacher can never teach > 2 consecutive periods in the same class (no double + double or double + single!)
-          let classTeacherClash = false;
-          for (const tId of unitTeachers) {
-            const cSlots = classSchedule[unit.class_id][day];
-            if (unit.duration === 2) {
-              const prevHasTeacher = cSlots[p - 1] && cSlots[p - 1].some(s => s.teacher_id === tId);
-              const nextHasTeacher = cSlots[unitEnd + 1] && cSlots[unitEnd + 1].some(s => s.teacher_id === tId);
-              if (prevHasTeacher || nextHasTeacher) {
-                classTeacherClash = true;
-                break;
-              }
-            } else {
-              const prev1 = cSlots[p - 1] && cSlots[p - 1].some(s => s.teacher_id === tId);
-              const prev2 = cSlots[p - 2] && cSlots[p - 2].some(s => s.teacher_id === tId);
-              const next1 = cSlots[p + 1] && cSlots[p + 1].some(s => s.teacher_id === tId);
-              const next2 = cSlots[p + 2] && cSlots[p + 2].some(s => s.teacher_id === tId);
-              if ((prev1 && prev2) || (next1 && next2) || (prev1 && next1)) {
-                classTeacherClash = true;
-                break;
-              }
-            }
-          }
-          if (classTeacherClash) continue;
-
-          // PERIOD 8 SUBJECT ELIGIBILITY & NO DUPLICATE PER CLASS:
-          if (p === 8 || unitEnd === 8) {
-            const targetClass = classMap[unit.class_id];
-            const isJuniorClassP8 = targetClass && (targetClass.level === 'JS' || (targetClass.name && targetClass.name.startsWith('JS')));
-            
-            if (isJuniorClassP8) {
-              // Junior fills all 4 regular days (Mon, Tue, Wed, Thu) where Period 8 exists
-              if ((classPeriod8TotalCount[unit.class_id] || 0) >= 4) {
-                continue;
-              }
-              const isAllowedJuniorLight = unitSubjects.every(sId => {
-                const code = (subjectMap[sId]?.code || '').toUpperCase();
-                return isJuniorLightSubject(code);
-              });
-              if (!isAllowedJuniorLight) continue;
-            } else {
-              // Senior: ONLY DPR, CIV, AGR, IRS are allowed in Period 8!
-              const isAllowedSeniorLight = !unit.isPaired && unitSubjects.every(sId => {
-                const code = (subjectMap[sId]?.code || '').toUpperCase();
-                return ['DPR', 'CIV', 'AGR', 'IRS'].includes(code);
-              });
-              if (!isAllowedSeniorLight) continue;
-            }
-
-            // In ANY class, no subject can appear in Period 8 more than once!
-            let p8SubDuplicate = false;
-            for (const sId of unitSubjects) {
-              if ((classPeriod8SubjectCount[unit.class_id]?.[sId] || 0) >= 1) {
-                p8SubDuplicate = true;
-                break;
-              }
-            }
-            if (p8SubDuplicate) continue;
-          }
 
           // Avoid clustering same subject on same day in class:
           // A class can NEVER have more than 1 session of the same subject in a single day
@@ -1453,7 +1177,7 @@ export class TimetableGenerator {
             }
           } else {
             // Friday: Junior targets exactly 3 periods (P2-P4), Senior targets exactly 5 periods (P2-P6)
-            const maxFri = isJunior ? 3 : 5;
+            const maxFri = isJunior ? 1 : 5;
             if (classDaily + unit.duration > maxFri) {
               continue; // Strictly disallow exceeding allowed Friday periods
             } else if (classDaily < maxFri) {
@@ -1473,15 +1197,9 @@ export class TimetableGenerator {
             penalty += 8000;
           }
 
-          // Check if this unit is eligible to close the day in Period 8
-          const isEligibleP8 = (p === 8) && (
-            (isJunior && unitSubjects.every(sId => isJuniorLightSubject(subjectMap[sId]?.code))) ||
-            (!isJunior && !unit.isPaired && unitSubjects.every(sId => ['DPR', 'CIV', 'AGR', 'IRS'].includes((subjectMap[sId]?.code || '').toUpperCase())))
-          );
-
           // Strict Hard Constraint: NEVER create an internal hole/gap in the student's day!
-          // Exception: Period 8 eligible closing subjects can be scheduled into Period 8 directly
-          if (p > startPeriod && !classSchedule[unit.class_id][day][p - 1] && !isEligibleP8) {
+          // If (p - 1) is empty and there is at least one occupied period earlier in the day, placing at p is FORBIDDEN!
+          if (p > startPeriod && !classSchedule[unit.class_id][day][p - 1]) {
             let hasOccupiedEarlier = false;
             for (let k = startPeriod; k < p - 1; k++) {
               if (classSchedule[unit.class_id][day][k]) {
@@ -1521,24 +1239,19 @@ export class TimetableGenerator {
                 morningUnfilled++;
               }
             }
-            if (morningUnfilled > 0 && !isEligibleP8) {
+            if (morningUnfilled > 0) {
               penalty += morningUnfilled * 9000; // Never put classes after break if morning is empty!
             }
 
             // In the afternoon, must also be contiguous starting from Period 5 downwards
-            if (!isEligibleP8) {
-              let afternoonGaps = 0;
-              for (let prevP = 5; prevP < p; prevP++) {
-                if (!classSchedule[unit.class_id][day][prevP]) {
-                  afternoonGaps++;
-                }
+            let afternoonGaps = 0;
+            for (let prevP = 5; prevP < p; prevP++) {
+              if (!classSchedule[unit.class_id][day][prevP]) {
+                afternoonGaps++;
               }
-              if (afternoonGaps > 0) {
-                penalty += afternoonGaps * 6000; // Push all empty classes to the very last period(s)!
-              }
-            } else {
-              // Strongly reward eligible Period 8 subjects taking Period 8 so P1-P6 stay free for core/paired subjects!
-              penalty -= 8000;
+            }
+            if (afternoonGaps > 0) {
+              penalty += afternoonGaps * 6000; // Push all empty classes to the very last period(s)!
             }
           }
 
@@ -1561,14 +1274,7 @@ export class TimetableGenerator {
       }
 
       candidates.sort((a, b) => a.penalty - b.penalty);
-      let chosen;
-      if (stochastic && unit.duration === 1) {
-        const bestPenalty = candidates[0].penalty;
-        const pool = candidates.filter(c => c.penalty <= bestPenalty + 250);
-        chosen = pool[Math.floor(Math.random() * pool.length)];
-      } else {
-        chosen = candidates[0];
-      }
+      const chosen = candidates[0];
 
       // Place slot(s)
       for (let offset = 0; offset < chosen.duration; offset++) {
@@ -1625,18 +1331,6 @@ export class TimetableGenerator {
             classAfterBreakCount[unit.class_id] = (classAfterBreakCount[unit.class_id] || 0) + 1;
           }
 
-          if (periodIdx === 8) {
-            classPeriod8SubjectCount[unit.class_id][unit.allocA.subject_id] = (classPeriod8SubjectCount[unit.class_id][unit.allocA.subject_id] || 0) + 1;
-            classPeriod8SubjectCount[unit.class_id][unit.allocB.subject_id] = (classPeriod8SubjectCount[unit.class_id][unit.allocB.subject_id] || 0) + 1;
-            classPeriod8TotalCount[unit.class_id] = (classPeriod8TotalCount[unit.class_id] || 0) + 1;
-            const clsObj = classMap[unit.class_id];
-            const isJun = clsObj && (clsObj.name?.startsWith('JS') || clsObj.level === 'JS');
-            for (const tId of [unit.allocA.teacher_id, unit.allocB.teacher_id]) {
-              if (isJun) teacherJuniorP8Count[tId] = (teacherJuniorP8Count[tId] || 0) + 1;
-              else teacherSeniorP8Count[tId] = (teacherSeniorP8Count[tId] || 0) + 1;
-            }
-          }
-
           placedSlots.push(slotA, slotB);
         } else {
           const slot = {
@@ -1667,18 +1361,6 @@ export class TimetableGenerator {
             teacherAfterBreakCount[unit.alloc.teacher_id] = (teacherAfterBreakCount[unit.alloc.teacher_id] || 0) + 1;
             teacherDayAfterBreakCount[unit.alloc.teacher_id][chosen.day] = (teacherDayAfterBreakCount[unit.alloc.teacher_id][chosen.day] || 0) + 1;
             classAfterBreakCount[unit.class_id] = (classAfterBreakCount[unit.class_id] || 0) + 1;
-          }
-
-          if (periodIdx === 8) {
-            classPeriod8SubjectCount[unit.class_id][unit.alloc.subject_id] = (classPeriod8SubjectCount[unit.class_id][unit.alloc.subject_id] || 0) + 1;
-            classPeriod8TotalCount[unit.class_id] = (classPeriod8TotalCount[unit.class_id] || 0) + 1;
-            const clsObj = classMap[unit.class_id];
-            const isJun = clsObj && (clsObj.name?.startsWith('JS') || clsObj.level === 'JS');
-            if (isJun) {
-              teacherJuniorP8Count[unit.alloc.teacher_id] = (teacherJuniorP8Count[unit.alloc.teacher_id] || 0) + 1;
-            } else {
-              teacherSeniorP8Count[unit.alloc.teacher_id] = (teacherSeniorP8Count[unit.alloc.teacher_id] || 0) + 1;
-            }
           }
 
           classDayPeriodCount[unit.class_id][chosen.day] = (classDayPeriodCount[unit.class_id][chosen.day] || 0) + 1;

@@ -95,7 +95,8 @@ export function seedDatabase() {
     { name: 'ECON', code: 'ECO', category: 'Social Sciences', color: '#c2410c' },
     { name: 'BUS', code: 'BUS', category: 'Pre-Vocational', color: '#ea580c' },
     { name: 'PVS', code: 'PVS', category: 'Pre-Vocational', color: '#b45309' },
-    { name: 'NV', code: 'NV', category: 'Social Sciences', color: '#4f46e5' }
+    { name: 'NV', code: 'NV', category: 'Social Sciences', color: '#4f46e5' },
+    { name: 'STUDY / LIB', code: 'STP', category: 'General', color: '#64748b' }
   ];
 
   const insertSubject = db.prepare(`
@@ -152,12 +153,12 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #2: M. MUBARAK
-  // Total = 19 periods / week
+  // Total = 21 periods / week (10 Maths in JS 1-2 + 11 DPR in SS 1-3)
   // =========================================================================
   addAlloc('JS 1', 'MTH', 'MMB', 5, 2);
   addAlloc('JS 2', 'MTH', 'MMB', 5, 2);
-  addAlloc('SS 1', 'DPR', 'MMB', 3, 0);
-  addAlloc('SS 2', 'DPR', 'MMB', 3, 0);
+  addAlloc('SS 1', 'DPR', 'MMB', 4, 1);
+  addAlloc('SS 2', 'DPR', 'MMB', 4, 1);
   addAlloc('SS 3', 'DPR', 'MMB', 3, 0);
 
   // =========================================================================
@@ -184,73 +185,79 @@ export function seedDatabase() {
 
   // =========================================================================
   // TEACHER #5: M. YUSUF
-  // Total = 10 periods / week (Mathematics in SS 2 & SS 3, 2 doubles + 1 single each)
+  // Total = 16 periods / week:
+  // - Mathematics in SS 2 & SS 3 (5 contacts each = 10, 2 doubles + 1 single each)
+  // - Islamic Studies (IRS) in JS 3 (3 contacts = 3)
+  // - Study Period / Library (STP) in JS 1, JS 2, JS 3 (1 contact each = 3)
   // =========================================================================
   addAlloc('SS 2', 'MTH', 'MYS', 5, 2);
   addAlloc('SS 3', 'MTH', 'MYS', 5, 2);
+  addAlloc('JS 3', 'IRS', 'MYS', 3, 0);
+  addAlloc('JS 1', 'STP', 'MYS', 1, 0);
+  addAlloc('JS 2', 'STP', 'MYS', 1, 0);
+  addAlloc('JS 3', 'STP', 'MYS', 1, 0);
 
   // =========================================================================
   // TEACHER #6: M. ZAINAB KABIR (Friday Absent, Balanced Workload)
-  // Total = 24 periods / week (15 English + 9 Business Studies)
+  // Total = 24 periods / week (15 English [2 doubles + 1 single each] + 9 Business Studies)
   // =========================================================================
-  addAlloc('JS 1', 'ENG', 'MZK', 5, 1);
-  addAlloc('JS 2', 'ENG', 'MZK', 5, 1);
-  addAlloc('JS 3', 'ENG', 'MZK', 5, 1);
+  addAlloc('JS 1', 'ENG', 'MZK', 5, 2);
+  addAlloc('JS 2', 'ENG', 'MZK', 5, 2);
+  addAlloc('JS 3', 'ENG', 'MZK', 5, 2);
   addAlloc('JS 1', 'BUS', 'MZK', 3, 0);
   addAlloc('JS 2', 'BUS', 'MZK', 3, 0);
   addAlloc('JS 3', 'BUS', 'MZK', 3, 0);
 
   // =========================================================================
   // TEACHER #7: M. SUMAYYA
-  // Total = 24 periods / week (15 English in SS 1-3 + 9 Computer in JS 1-3)
+  // Total = 24 periods / week (15 English in SS 1-3 [2 doubles + 1 single each] + 9 Computer in JS 1-3)
   // Balanced Workload (max 5/day) & English Protected From Tired Hours
   // =========================================================================
-  addAlloc('SS 1', 'ENG', 'MSM', 5, 1);
-  addAlloc('SS 2', 'ENG', 'MSM', 5, 1);
-  addAlloc('SS 3', 'ENG', 'MSM', 5, 1);
+  addAlloc('SS 1', 'ENG', 'MSM', 5, 2);
+  addAlloc('SS 2', 'ENG', 'MSM', 5, 2);
+  addAlloc('SS 3', 'ENG', 'MSM', 5, 2);
   addAlloc('JS 1', 'CMP', 'MSM', 3, 0);
   addAlloc('JS 2', 'CMP', 'MSM', 3, 0);
   addAlloc('JS 3', 'CMP', 'MSM', 3, 0);
 
   // =========================================================================
   // TEACHER #8: M. ABBA
-  // Total = 24 periods / week (12 Economics paired w/ Chemistry in SS 1-3 + 12 Civic in SS 1-3)
+  // Total = 23 periods / week (12 Economics paired w/ Chemistry in SS 1-3 + 11 Civic in SS 1-3)
   // Balanced Workload (max 5/day)
   // =========================================================================
   addAlloc('SS 1', 'ECO', 'MAB', 4, 1);
   addAlloc('SS 2', 'ECO', 'MAB', 4, 1);
   addAlloc('SS 3', 'ECO', 'MAB', 4, 1);
-  addAlloc('SS 1', 'CIV', 'MAB', 4, 1);
+  addAlloc('SS 1', 'CIV', 'MAB', 3, 0);
   addAlloc('SS 2', 'CIV', 'MAB', 4, 1);
   addAlloc('SS 3', 'CIV', 'MAB', 4, 1);
 
   // =========================================================================
   // TEACHER #9: M. AMINA
-  // Total = 24 periods / week (12 Biology paired w/ Literature in SS 1-3 + 12 Agric in SS 1-3)
+  // Total = 23 periods / week (12 Biology paired w/ Literature in SS 1-3 + 11 Agric in SS 1-3)
   // Balanced Workload 50/50 before/after break (max 5/day)
   // =========================================================================
   addAlloc('SS 1', 'BIO', 'MAM', 4, 1);
   addAlloc('SS 2', 'BIO', 'MAM', 4, 1);
   addAlloc('SS 3', 'BIO', 'MAM', 4, 1);
   addAlloc('SS 1', 'AGR', 'MAM', 4, 1);
-  addAlloc('SS 2', 'AGR', 'MAM', 4, 1);
+  addAlloc('SS 2', 'AGR', 'MAM', 3, 0);
   addAlloc('SS 3', 'AGR', 'MAM', 4, 1);
 
   // =========================================================================
   // TEACHER #10: M. MARYAM
   // Total = 24 periods / week:
   // - Pre-Vocational Studies in JS 1-3 (3 contacts each = 9)
-  // - National Values in JS 1-3 (3 contacts each = 9)
-  // - Islamic Studies (IRS) in JS 1 and JS 3 (3 contacts each = 6)
+  // - National Values in JS 1-3 (4 contacts each = 12, 1 double + 2 singles each)
+  // - Islamic Studies (IRS) in JS 1 only (3 contacts = 3)
   // =========================================================================
   addAlloc('JS 1', 'PVS', 'MMY', 3, 0);
   addAlloc('JS 2', 'PVS', 'MMY', 3, 0);
   addAlloc('JS 3', 'PVS', 'MMY', 3, 0);
-  addAlloc('JS 1', 'NV', 'MMY', 3, 0);
-  addAlloc('JS 2', 'NV', 'MMY', 3, 0);
-  addAlloc('JS 3', 'NV', 'MMY', 3, 0);
+  addAlloc('JS 1', 'NV', 'MMY', 4, 1);
+  addAlloc('JS 2', 'NV', 'MMY', 4, 1);
+  addAlloc('JS 3', 'NV', 'MMY', 4, 1);
   addAlloc('JS 1', 'IRS', 'MMY', 3, 0);
-  addAlloc('JS 3', 'IRS', 'MMY', 3, 0);
 
   // =========================================================================
   // TEACHER #11: M. NABILA
