@@ -409,13 +409,14 @@ export class TimetableGenerator {
     const cBusy2 = p2 ? currentSlots.some(s => s.class_id === unit.class_id && s.day === day && s.period_index === p2) : false;
     if (cBusy1 || cBusy2) return false;
 
-    // Teachers
+    // Teachers & Subjects
     const tIds = unit.isPaired ? [unit.allocA.teacher_id, unit.allocB.teacher_id] : [unit.alloc.teacher_id];
-     const unitEnd = period + unit.duration - 1;
+    const sIds = unit.isPaired ? [unit.allocA.subject_id, unit.allocB.subject_id] : [unit.alloc.subject_id];
+    const unitEnd = period + unit.duration - 1;
 
     // 1. SAME CLASS CONSECUTIVE CHECK:
-    // A class can NEVER have two double periods in a row by the same teacher (e.g. IRS double + NV double)!
     // A teacher can NEVER teach more than 2 consecutive periods in the same class!
+    // A teacher can NEVER finish a subject in a class and immediately teach that same class with a DIFFERENT subject!
     if (unit.duration === 2) {
       const hasAdjacentInClass = currentSlots.some(s => 
         s.class_id === unit.class_id && 
@@ -425,6 +426,17 @@ export class TimetableGenerator {
       );
       if (hasAdjacentInClass) return false;
     } else {
+      // USER RULE: A teacher finished a class with one subject CANNOT immediately teach that same class with ANOTHER subject!
+      const prevInClass = currentSlots.find(s => s.class_id === unit.class_id && s.day === day && s.period_index === period - 1);
+      if (prevInClass && tIds.includes(prevInClass.teacher_id) && !sIds.includes(prevInClass.subject_id)) {
+        return false;
+      }
+      const nextInClass = currentSlots.find(s => s.class_id === unit.class_id && s.day === day && s.period_index === period + 1);
+      if (nextInClass && tIds.includes(nextInClass.teacher_id) && !sIds.includes(nextInClass.subject_id)) {
+        return false;
+      }
+
+      // Prevent 3+ consecutive periods of the same teacher in the same class
       const prev1 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period - 1);
       const prev2 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period - 2);
       const next1 = currentSlots.some(s => s.class_id === unit.class_id && tIds.includes(s.teacher_id) && s.day === day && s.period_index === period + 1);
@@ -440,6 +452,31 @@ export class TimetableGenerator {
       const tBusy1 = currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === period);
       const tBusy2 = p2 ? currentSlots.some(s => s.teacher_id === tId && s.day === day && s.period_index === p2) : false;
       if (tBusy1 || tBusy2) return false;
+
+      // USER RULE: A teacher can NEVER teach two double periods in the same session without break!
+      if (unit.duration === 2) {
+        const isMorn = period <= 4;
+        const tSessSlots = currentSlots.filter(s => s.teacher_id === tId && s.day === day && (isMorn ? s.period_index <= 4 : s.period_index > 4));
+        for (let k = 0; k < tSessSlots.length - 1; k++) {
+          for (let l = k + 1; l < tSessSlots.length; l++) {
+            if (Math.abs(tSessSlots[k].period_index - tSessSlots[l].period_index) === 1 &&
+                tSessSlots[k].subject_id === tSessSlots[l].subject_id) {
+              return false; // Teacher already has another double period in this session!
+            }
+          }
+        }
+        // Across-break back-to-back:
+        if (period === 5) {
+          const p3 = currentSlots.find(s => s.teacher_id === tId && s.day === day && s.period_index === 3);
+          const p4 = currentSlots.find(s => s.teacher_id === tId && s.day === day && s.period_index === 4);
+          if (p3 && p4 && p3.subject_id === p4.subject_id) return false;
+        }
+        if (period === 3) {
+          const p5 = currentSlots.find(s => s.teacher_id === tId && s.day === day && s.period_index === 5);
+          const p6 = currentSlots.find(s => s.teacher_id === tId && s.day === day && s.period_index === 6);
+          if (p5 && p6 && p5.subject_id === p6.subject_id) return false;
+        }
+      }
 
       // Daily max: 6 on Mon-Thu, 4 on Friday
       const tDaySlots = currentSlots.filter(s => s.teacher_id === tId && s.day === day);
@@ -457,21 +494,27 @@ export class TimetableGenerator {
         const aCount = tDaySlots.filter(s => s.period_index > 4).length;
         if (aCount + unit.duration > 4) return false;
       }
-      // Period 8 limits for teachers:
+      // Period 8 limits for teachers: FAIR & EQUAL ROTATION (max 3 for ALL eligible teachers, 0 for Shehu, Hassan, Nana)
       if (period === 8 || unitEnd === 8) {
         const tP8Count = currentSlots.filter(s => s.teacher_id === tId && s.period_index === 8).length;
         if (t?.name?.includes('Shehu')) return false;
         if (t?.name?.includes('Hassan')) return false;
         if (t?.name?.includes('Nana')) return false;
-        if (t?.name?.includes('Sumayya') && tP8Count >= 2) return false;
-        if (t?.name?.includes('Zainab') && tP8Count >= 3) return false;
-        if (tP8Count >= 3 && !t?.name?.includes('Nabila')) return false;
-        if (tP8Count >= 4) return false;
+        if (tP8Count >= 3) return false;
+
+        // In Junior classes: only Yusuf, Zainab, Sumayya, Maryam allowed!
+        if (isJunior) {
+          const isJunTeacher = t?.name?.includes('Yusuf') || t?.name?.includes('Zainab') || t?.name?.includes('Sumayya') || t?.name?.includes('Maryam');
+          if (!isJunTeacher) return false;
+        } else {
+          // In Senior classes: only Mubarak, Abba, Amina, Nabila allowed!
+          const isSenTeacher = t?.name?.includes('Mubarak') || t?.name?.includes('Abba') || t?.name?.includes('Amina') || t?.name?.includes('Nabila');
+          if (!isSenTeacher) return false;
+        }
       }
     }
 
     // Subject restrictions
-    const sIds = unit.isPaired ? [unit.allocA.subject_id, unit.allocB.subject_id] : [unit.alloc.subject_id];
     for (const sId of sIds) {
       const sub = subjectMap[sId];
       const code = (sub?.code || '').toUpperCase();
@@ -677,6 +720,107 @@ export class TimetableGenerator {
         }
         if (unitPlaced) break;
       }
+    }
+
+    // Step 4: Multi-class 2-slot swap repair when units remain unplaced
+    let attempts = 0;
+    while (unplaced.length > 0 && unplaced.length <= 3 && attempts < 3) {
+      attempts++;
+      const u = unplaced[unplaced.length - 1];
+      const targetClassId = u.class_id;
+
+      const allEmpties = [];
+      for (const cls of classes) {
+        const isJun = cls && (cls.name?.startsWith('JS') || cls.level === 'JS');
+        for (const d of this.days) {
+          const maxP = d === 'Friday' ? (isJun ? 4 : 6) : 8;
+          const startP = (d === 'Monday' || d === 'Friday') ? 2 : 1;
+          for (let p = startP; p <= maxP; p++) {
+            if (!currentSlots.some(s => s.class_id === cls.id && s.day === d && s.period_index === p)) {
+              allEmpties.push({ class_id: cls.id, day: d, period: p });
+            }
+          }
+        }
+      }
+
+      const singleSlots = currentSlots.filter(s => !s.is_locked);
+      const slotsByClass = {};
+      for (const s of singleSlots) {
+        if (!slotsByClass[s.class_id]) slotsByClass[s.class_id] = [];
+        slotsByClass[s.class_id].push(s);
+      }
+
+      let swapSolved = false;
+      for (const [clsIdStr, cSlots] of Object.entries(slotsByClass)) {
+        const clsId = Number(clsIdStr);
+
+        for (let i = 0; i < cSlots.length; i++) {
+          for (let j = i + 1; j < cSlots.length; j++) {
+            const sA = cSlots[i];
+            const sB = cSlots[j];
+            if (sA.day === sB.day && sA.period_index === sB.period_index) continue;
+            if (sA.subject_id === sB.subject_id && sA.teacher_id === sB.teacher_id) continue;
+
+            const withoutBoth = currentSlots.filter(x => x !== sA && x !== sB);
+            const unitA = { class_id: clsId, duration: 1, isPaired: false, alloc: { subject_id: sA.subject_id, teacher_id: sA.teacher_id, class_id: clsId } };
+            const unitB = { class_id: clsId, duration: 1, isPaired: false, alloc: { subject_id: sB.subject_id, teacher_id: sB.teacher_id, class_id: clsId } };
+
+            if (this._canPlaceSlot(unitA, sB.day, sB.period_index, withoutBoth, classMap, teacherMap, subjectMap)) {
+              const withAAtB = [...withoutBoth, { ...sA, day: sB.day, period_index: sB.period_index }];
+              if (this._canPlaceSlot(unitB, sA.day, sA.period_index, withAAtB, classMap, teacherMap, subjectMap)) {
+                const swappedSlots = [...withAAtB, { ...sB, day: sA.day, period_index: sA.period_index }];
+
+                for (const e of allEmpties) {
+                  if (e.class_id === targetClassId && this._canPlaceSlot(u, e.day, e.period, swappedSlots, classMap, teacherMap, subjectMap)) {
+                    currentSlots = [...swappedSlots, {
+                      class_id: targetClassId,
+                      subject_id: (u.alloc || u.allocA).subject_id,
+                      teacher_id: (u.alloc || u.allocA).teacher_id,
+                      day: e.day,
+                      period_index: e.period,
+                      is_locked: 0
+                    }];
+                    unplaced.pop();
+                    swapSolved = true;
+                    break;
+                  }
+                }
+                if (swapSolved) break;
+
+                for (const e of allEmpties) {
+                  if (e.class_id === targetClassId) {
+                    for (const sTarget of swappedSlots.filter(s => s.class_id === targetClassId)) {
+                      const withoutSTarget = swappedSlots.filter(x => x !== sTarget);
+                      const uTarget = { class_id: targetClassId, duration: 1, isPaired: false, alloc: { subject_id: sTarget.subject_id, teacher_id: sTarget.teacher_id, class_id: targetClassId } };
+                      if (this._canPlaceSlot(uTarget, e.day, e.period, withoutSTarget, classMap, teacherMap, subjectMap)) {
+                        const withSTargetAtE = [...withoutSTarget, { ...sTarget, day: e.day, period_index: e.period }];
+                        if (this._canPlaceSlot(u, sTarget.day, sTarget.period_index, withSTargetAtE, classMap, teacherMap, subjectMap)) {
+                          currentSlots = [...withSTargetAtE, {
+                            class_id: targetClassId,
+                            subject_id: (u.alloc || u.allocA).subject_id,
+                            teacher_id: (u.alloc || u.allocA).teacher_id,
+                            day: sTarget.day,
+                            period_index: sTarget.period_index,
+                            is_locked: 0
+                          }];
+                          unplaced.pop();
+                          swapSolved = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                  if (swapSolved) break;
+                }
+                if (swapSolved) break;
+              }
+            }
+          }
+          if (swapSolved) break;
+        }
+        if (swapSolved) break;
+      }
+      if (!swapSolved) break;
     }
 
     return {
@@ -1269,8 +1413,48 @@ export class TimetableGenerator {
               penalty += 3500;
             }
 
+            // USER RULE: A teacher can NEVER teach two double periods in the same session without break!
+            if (unit.duration === 2) {
+              let hasDoubleInSession = false;
+              const tDaySched = teacherSchedule[tId][day];
+              if (p <= 4) {
+                for (let cp = 1; cp <= 3; cp++) {
+                  const sA = tDaySched[cp];
+                  const sB = tDaySched[cp + 1];
+                  if (sA && sB && sA.subject_id === sB.subject_id) {
+                    hasDoubleInSession = true;
+                    break;
+                  }
+                }
+                // Back-to-back with P5-P6
+                if (p === 3) {
+                  const s5 = tDaySched[5];
+                  const s6 = tDaySched[6];
+                  if (s5 && s6 && s5.subject_id === s6.subject_id) hasDoubleInSession = true;
+                }
+              } else {
+                for (let cp = 5; cp <= 7; cp++) {
+                  const sA = tDaySched[cp];
+                  const sB = tDaySched[cp + 1];
+                  if (sA && sB && sA.subject_id === sB.subject_id) {
+                    hasDoubleInSession = true;
+                    break;
+                  }
+                }
+                // Back-to-back with P3-P4
+                if (p === 5) {
+                  const s3 = tDaySched[3];
+                  const s4 = tDaySched[4];
+                  if (s3 && s4 && s3.subject_id === s4.subject_id) hasDoubleInSession = true;
+                }
+              }
+              if (hasDoubleInSession) {
+                teacherConstraintViolated = true;
+                break;
+              }
+            }
+
             // Session Breathers (UNIVERSAL FOR ALL TEACHERS):
-            // Session Breathers:
             const dayBefore = teacherDayBeforeBreakCount[tId]?.[day] || 0;
             const dayAfter = teacherDayAfterBreakCount[tId]?.[day] || 0;
 
@@ -1333,42 +1517,43 @@ export class TimetableGenerator {
               const isJuniorClassP8 = targetClass && (targetClass.level === 'JS' || (targetClass.name && targetClass.name.startsWith('JS')));
               
               if (isJuniorClassP8) {
+                const isJunTeacher = tObj?.name?.includes('Yusuf') || tObj?.name?.includes('Zainab') || tObj?.name?.includes('Sumayya') || tObj?.name?.includes('Maryam');
+                if (!isJunTeacher) {
+                  teacherConstraintViolated = true;
+                  break;
+                }
                 const curJun = teacherJuniorP8Count[tId] || 0;
-                // In Junior: Sumayya strictly max 2; others max 3
-                const maxJun = (isSumayya) ? 2 : 3;
-                if (curJun >= maxJun) {
+                if (curJun >= 3) {
                   teacherConstraintViolated = true;
                   break;
                 }
               } else {
+                const isSenTeacher = tObj?.name?.includes('Mubarak') || tObj?.name?.includes('Abba') || tObj?.name?.includes('Amina') || tObj?.name?.includes('Nabila');
+                if (!isSenTeacher) {
+                  teacherConstraintViolated = true;
+                  break;
+                }
                 const curSen = teacherSeniorP8Count[tId] || 0;
-                // In Senior: each teacher max 3 Senior P8 slots!
                 if (curSen >= 3) {
                   teacherConstraintViolated = true;
                   break;
                 }
               }
 
-              // M. Sumayya: strictly max 2 across entire week!
-              if (isSumayya && currentP8 >= 2) {
-                teacherConstraintViolated = true;
-                break;
-              }
-              // M. Nabila teaches both Junior & Senior, max 4 total; others max 3
-              const isNabila = tObj?.name?.includes('Nabila');
-              const maxP8Total = isNabila ? 4 : 3;
-              if (currentP8 >= maxP8Total) {
+              // STRICT EQUALITY: ALL eligible teachers get strictly MAX 3 Period 8 slots!
+              // (M. Shehu, M. Hassan, M. Nana Firdaus = 0; remaining 8 teachers each get exactly 3 slots!)
+              if (currentP8 >= 3) {
                 teacherConstraintViolated = true;
                 break;
               }
               // Rotation penalty so Period 8 is shared equally across teachers
-              penalty += currentP8 * 300;
+              penalty += currentP8 * 500;
             }
           }
           if (teacherConstraintViolated) continue;
 
           // SAME CLASS CONSECUTIVE PROTECTION:
-          // A teacher can never teach > 2 consecutive periods in the same class (no double + double or double + single!)
+          // A teacher can never teach adjacent periods in the same class unless it's a planned double period!
           let classTeacherClash = false;
           for (const tId of unitTeachers) {
             const cSlots = classSchedule[unit.class_id][day];
@@ -1380,11 +1565,9 @@ export class TimetableGenerator {
                 break;
               }
             } else {
-              const prev1 = cSlots[p - 1] && cSlots[p - 1].some(s => s.teacher_id === tId);
-              const prev2 = cSlots[p - 2] && cSlots[p - 2].some(s => s.teacher_id === tId);
-              const next1 = cSlots[p + 1] && cSlots[p + 1].some(s => s.teacher_id === tId);
-              const next2 = cSlots[p + 2] && cSlots[p + 2].some(s => s.teacher_id === tId);
-              if ((prev1 && prev2) || (next1 && next2) || (prev1 && next1)) {
+              const prevHasTeacher = cSlots[p - 1] && cSlots[p - 1].some(s => s.teacher_id === tId && !unitSubjects.includes(s.subject_id));
+              const nextHasTeacher = cSlots[p + 1] && cSlots[p + 1].some(s => s.teacher_id === tId && !unitSubjects.includes(s.subject_id));
+              if (prevHasTeacher || nextHasTeacher) {
                 classTeacherClash = true;
                 break;
               }

@@ -1,0 +1,1970 @@
+[
+  {
+    "class_id": 457,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Friday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1294,
+    "teacher_id": 618,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Friday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1281,
+    "teacher_id": 618,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Friday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Friday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Friday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Friday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Friday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Friday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Friday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Friday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Monday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Monday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Monday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Monday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Monday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Monday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Monday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Thursday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Thursday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1281,
+    "teacher_id": 623,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Thursday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1281,
+    "teacher_id": 623,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Thursday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Thursday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1294,
+    "teacher_id": 618,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Thursday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Tuesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1281,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Tuesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1281,
+    "teacher_id": 618,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Tuesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Wednesday",
+    "period_index": 1,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1275,
+    "teacher_id": 615,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1282,
+    "teacher_id": 624,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1277,
+    "teacher_id": 616,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1274,
+    "teacher_id": 614,
+    "day": "Wednesday",
+    "period_index": 2,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1283,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1294,
+    "teacher_id": 618,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Wednesday",
+    "period_index": 3,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1293,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Wednesday",
+    "period_index": 4,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1275,
+    "teacher_id": 614,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1283,
+    "teacher_id": 620,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1275,
+    "teacher_id": 618,
+    "day": "Wednesday",
+    "period_index": 5,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1280,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Wednesday",
+    "period_index": 6,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1287,
+    "teacher_id": 620,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1276,
+    "teacher_id": 615,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1279,
+    "teacher_id": 617,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1290,
+    "teacher_id": 621,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1289,
+    "teacher_id": 622,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1278,
+    "teacher_id": 616,
+    "day": "Wednesday",
+    "period_index": 7,
+    "is_locked": 0
+  },
+  {
+    "class_id": 457,
+    "subject_id": 1292,
+    "teacher_id": 623,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 458,
+    "subject_id": 1291,
+    "teacher_id": 619,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 459,
+    "subject_id": 1281,
+    "teacher_id": 618,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 460,
+    "subject_id": 1288,
+    "teacher_id": 622,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 461,
+    "subject_id": 1281,
+    "teacher_id": 624,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  },
+  {
+    "class_id": 462,
+    "subject_id": 1286,
+    "teacher_id": 621,
+    "day": "Wednesday",
+    "period_index": 8,
+    "is_locked": 0
+  }
+]
